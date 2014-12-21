@@ -79,3 +79,7 @@ App::down(function()
 */
 
 require app_path().'/filters.php';
+
+//PACO Loger SQL
+require_once app_path('logger.php');
+
