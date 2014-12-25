@@ -16,8 +16,11 @@
 //	return View::make('calendar');
 //});
 
+Route::get('/','CalendarController@login');
+Route::post('logeado','CalendarController@postLogin');
+Route::get('logout','CalendarController@logout');
 
-Route::get('/','CalendarController@generar_calendario_inicio');
+Route::get('main','CalendarController@generar_calendario_inicio');
 Route::get('generar_calendario','CalendarController@generar_calendario');
 Route::get('guardar_evento','CalendarController@guardar_evento');
 Route::get('listar_evento','CalendarController@listar_evento');

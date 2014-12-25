@@ -16,6 +16,43 @@
 
 @stop
 
+@section('menu')
+
+<nav id="nav">
+    <ul>
+        <li><a class="icon fa-home" href="logout"><span>Salir</span></a></li>
+    </ul>
+    
+    
+    
+<!--    <ul>
+        <li><a class="icon fa-home" href="index.html"><span>Introduction</span></a></li>
+        <li>
+            <a href="" class="icon fa-bar-chart-o"><span>Dropdown</span></a>
+            <ul>
+                <li><a href="#">Lorem ipsum dolor</a></li>
+                <li><a href="#">Magna phasellus</a></li>
+                <li><a href="#">Etiam dolore nisl</a></li>
+                <li>
+                    <a href="">Phasellus consequat</a>
+                    <ul>
+                        <li><a href="#">Magna phasellus</a></li>
+                        <li><a href="#">Etiam dolore nisl</a></li>
+                        <li><a href="#">Phasellus consequat</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Veroeros feugiat</a></li>
+            </ul>
+        </li>
+        <li><a class="icon fa-cog" href="left-sidebar.html"><span>Left Sidebar</span></a></li>
+        <li><a class="icon fa-retweet" href="right-sidebar.html"><span>Right Sidebar</span></a></li>
+        <li><a class="icon fa-sitemap" href="no-sidebar.html"><span>No Sidebar</span></a></li>-->
+    </ul>
+</nav>
+@stop
+
+
+
 
 @section('content')
 
@@ -57,6 +94,7 @@ function formatDate (input) {
 
 
                 /* AGREGAR UN EVENTO */
+                //BORRAR, COMPROBAR ANTES CLARO
                 $(document).on("click",'a.add',function(e) 
                 {
                         e.preventDefault();
@@ -71,8 +109,10 @@ function formatDate (input) {
                 {
                         e.preventDefault();
                         var fecha = $(this).attr('rel');
+                        var nuevoHtml="<form class='formeventos'><input type='text' name='evento_titulo' id='evento_titulo' class='required'><input type='button' name='Enviar' value='Guardar' class='enviar'><input type='hidden' name='evento_fecha' id='evento_fecha' value='"+fecha+"'></form>";
+                        
 
-                        $('#mask').fadeIn(1000).html("<div id='nuevo_evento' class='window' rel='"+fecha+"'>Eventos del "+formatDate(fecha)+"</h2><a href='#' class='close' rel='"+fecha+"'><img src='{{ URL::asset('img/delete.png') }}' height='18' width='18'>&nbsp;</a><div id='respuesta'></div><div id='respuesta_form'></div></div>");
+                        $('#mask').fadeIn(1000).html("<div id='nuevo_evento' class='window' rel='"+fecha+"'>Eventos del "+formatDate(fecha)+"</h2><a href='#' class='close' rel='"+fecha+"'><img src='{{ URL::asset('img/delete.png') }}' height='18' width='18'>&nbsp;</a>"+nuevoHtml+"<div id='respuesta'></div><div id='respuesta_form'></div></div>");
                         $.ajax({
                                 type: "GET",
                                 url: "listar_evento",

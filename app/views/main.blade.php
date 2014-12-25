@@ -4,7 +4,7 @@
 <!--[if IE 8 ]><html class="ie ie8" lang="es"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!--><html lang="es"> <!--<![endif]-->
     <head>
-        <title>Left Sidebar - Strongly Typed by HTML5 UP</title>
+        <title>Partes</title>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <meta name="description" content="" />
         <meta name="keywords" content="" />
@@ -19,11 +19,11 @@
         <script src="js/init.js"></script>
         
         
-        <link href='fullcalendar/fullcalendar.css' rel='stylesheet' />
+<!--        <link href='fullcalendar/fullcalendar.css' rel='stylesheet' />
         <link href='fullcalendar/fullcalendar.print.css' rel='stylesheet' media='print' />
         <script src='fullcalendar/lib/moment.min.js'></script>
-<!--        <script src='fullcalendar/lib/jquery.min.js'></script>-->
-        <script src='fullcalendar/fullcalendar.min.js'></script>
+        <script src='fullcalendar/lib/jquery.min.js'></script>
+        <script src='fullcalendar/fullcalendar.min.js'></script>-->
         
         <noscript>
         <link rel="stylesheet" href="css/skel.css" />
@@ -41,8 +41,17 @@
             <div id="header" class="container">
 
                 <!-- Logo -->
-                <h1 id="logo"><a href="{{ URL::to('/') }}">Partes FPP</a></h1>
-                <p>App para el registro de partes</p>
+                @if(Session::has('nombre') && Session::has('apellidos') && Session::has('rol'))
+                @else
+                <h1 id="logo"><a href="{{ URL::to('/') }}">Partes</a></h1>
+                @endif
+                <p>Registro de partes</p>
+                <p><b>{{ Session::get('nombre') }} {{ Session::get('apellidos') }}</b></p>
+                <p><b>{{ Session::get('rol') }}</b></p>
+                
+                
+                <!-- Nav -->
+                @yield('menu')
 
             </div>
         </div>

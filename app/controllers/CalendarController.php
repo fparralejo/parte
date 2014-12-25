@@ -15,12 +15,77 @@ class CalendarController extends BaseController {
 	|
 	*/
     
+        public function login(){
+            return View::make('login');
+        }
+
+        public function logout(){
+            Session::flush();
+            return View::make('login');
+        }
+        
+        public function getControl(){
+            //controlamos si estaamos en sesion por las distintas paginas de la app
+            //controlamos las vbles sesion 'nombre', 'apellidos' y 'rol'
+            if(Session::has('nombre') && Session::has('apellidos') && Session::has('rol')){
+                //chequeamos que estos valores del usuario existan en la tabla 'usuarios'
+                $existe=usuario::where('nombre','=',Session::get('nombre'))
+                                ->where('apellidos','=',Session::get('apellidos'))
+                                ->where('rol','=',Session::get('rol'))
+                                ->get();
+                
+                //si existe el contador es mayor que 0
+                if(count($existe)>0){
+                    return true;
+                }else{
+                    return false;
+                }
+            }else{
+                return false;
+            }
+        }
+
+        public function postLogin(){
+            //busco en la tabla de claves si existe
+            $encontrado = clave::where('nick','=',Input::get('nick'))
+                                ->where('password','=',Input::get('password'))
+                                ->where('borrado','=','1')
+                                ->get();
+
+            if(count($encontrado)>0){
+                //guardo las vbles de sesion para navegar por la app
+                $datosUsuario=usuario::where('Id','=',$encontrado[0]->IdClave)
+                                      ->where('borrado','=','1')
+                                      ->get();
+                
+                Session::put('nombre', $datosUsuario[0]->nombre);
+                Session::put('apellidos', $datosUsuario[0]->apellidos);
+                Session::put('rol', $datosUsuario[0]->rol);
+                
+                
+                return Redirect::to('main');
+            }else{
+                return $this->login()->with('error', 'Nick o clave incorrectos.');
+            }
+            
+        }
+
         public function generar_calendario_inicio(){
+            //control de sesion
+            if(!$this->getControl()){
+                return $this->login()->with('error', 'La sesión a expirado. Vuelva a logearse.');
+            }
+            
             return View::make('calendar',array('html'=>''));
         }
 
 	public function generar_calendario()
 	{
+            //control de sesion
+            if(!$this->getControl()){
+                return $this->login()->with('error', 'La sesión a expirado. Vuelva a logearse.');
+            }
+            
             $fecha_calendario=array();
             if (Input::get("mes")=="" || Input::get("anio")=="") 
             {
@@ -78,7 +143,7 @@ class CalendarController extends BaseController {
             if (isset($mostrar)) $html = $html . $mostrar;
 
             $html = $html . "<table class='calendario' cellspacing='0' cellpadding='0'>";
-                    $html = $html . "<tr><th>Lunes</th><th>Martes</th><th>Mi&eacute;rcoles</th><th>Jueves</th><th>Viernes</th><th>S&aacute;bado</th><th>Domingo</th></tr><tr>";
+                    $html = $html . "<tr><th>L</th><th>M</th><th>X</th><th>J</th><th>V</th><th>S</th><th>D</th></tr><tr>";
 
                     /* inicializamos filas de la tabla */
                     $tr=0;
@@ -109,11 +174,11 @@ class CalendarController extends BaseController {
                                             $html = $html . "'>";
 
                                             /* recorremos el array de eventos para mostrar los eventos del d�a de hoy */
-                                            if ($hayevento>0) $html = $html . "<a href='#' data-evento='#evento".$dia_actual."' class='modal' rel='".$fecha_completa."' title='Hay ".$hayevento." eventos'>".$dia."</a>";
-                                            else $html = $html . "$dia";
+                                            $html = $html . "<a href='#' data-evento='#evento".$dia_actual."' class='modal' rel='".$fecha_completa."' title='Hay ".$hayevento." eventos'>".$dia."</a>";
+                                            //else $html = $html . "$dia";
 
                                             /* agregamos enlace a nuevo evento si la fecha no ha pasado */
-                                            $html = $html . "<a href='#' data-evento='#nuevo_evento' title='Agregar un Evento el ".$this->fecha($fecha_completa)."' class='add agregar_evento' rel='".$fecha_completa."'><img src='". URL::asset('img/add.png') ."' height='18' width='18'>&nbsp;</a>";
+                                            //$html = $html . "<a href='#' data-evento='#nuevo_evento' title='Agregar un Evento el ".$this->fecha($fecha_completa)."' class='add agregar_evento' rel='".$fecha_completa."'><img src='". URL::asset('img/add.png') ."' height='18' width='18'>&nbsp;</a>";
 
                                             $html = $html . "</td>";
                                             $dia+=1;
