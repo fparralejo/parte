@@ -42,3 +42,16 @@ a.agregar_evento{display:block;position:absolute;right:0;top:0; background:#e9e9
 .window input[type=button]{border:0;width:35%;background:#ccc;float:right;padding:5px}
 .window p img{vertical-align:middle;float:right;border:0;width:16px;height:16px}
 label.error {position:absolute;left:13px;top:13px;padding:0;width:20px;height:20px;background:#fff url(img/delete.png) 50% 50% no-repeat;text-decoration:none;overflow:hidden;text-indent:-999em}
+
+.eventoCuadro{
+    border:1px solid #000;
+}
+
+.bgtr{
+    background-color: antiquewhite;
+    text-align: left;
+}
+.bgtr2{
+    background-color: mistyrose ;
+    text-align: left;
+}
