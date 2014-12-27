@@ -75,7 +75,7 @@ class CalendarController extends BaseController {
             return $this->login()->with('error', 'La sesión a expirado. Vuelva a logearse.');
         }
 
-        return View::make('calendar', array('html' => ''));
+        return View::make('calendar', array('html' => '','fecha'=>Input::get('fecha')));
     }
 
     public function generar_calendario() {
@@ -201,13 +201,7 @@ class CalendarController extends BaseController {
         $html = $html . "</table>";
         
         $mesanterior = date("Y-m-d", mktime(0, 0, 0, $fecha_calendario[1] - 1, 01, $fecha_calendario[0]));
-//        $mesanterior=explode('-',$mesanterior);
-//        $mesA=(string)$mesanterior[1];
-//        $anioA=(string)$mesanterior[0];
         $messiguiente = date("Y-m-d", mktime(0, 0, 0, $fecha_calendario[1] + 1, 01, $fecha_calendario[0]));
-//        $messiguiente=explode('-',$messiguiente);
-//        $mesP=(string)$messiguiente[1];
-//        $anioP=(string)$messiguiente[0];
         $html = $html . "<p class='toggle'>&laquo; <a href='#' onClick='cambiaMes(this);' rel='$mesanterior' class='anterior'>Mes Anterior</a> - <a href='#' onClick='cambiaMes(this);' class='siguiente' rel='$messiguiente'>Mes Siguiente</a> &raquo;</p>";
 
         //return View::make('calendar',array('html'=>$html));
@@ -267,10 +261,10 @@ class CalendarController extends BaseController {
 //                ->get();
 
         $html = '<table>';
-        $html = $html.'<tr><td colspan="3"><b>Listado de eventos</b></td></tr>';
+        $html = $html.'<tr><td colspan="3"><b>Listado de Partes</b></td></tr>';
         for ($i = 0; $i < count($query); $i++) {
-            $html = $html . "<tr class='bgtr'><td colspan='2'>" . $query[$i]->descripcion . "</td><td><a href='#' class='eliminar_evento' onClick='borrarEvento(" . $query[$i]->IdParte . ",".Input::get('anio').",".Input::get('mes').",".Input::get('dia').");' title='Eliminar este parte'><div  id='evIcono" . $query[$i]->IdParte . "'><img src='" . URL::asset('img/delete.png') . "' height='10' width='10'></div></a></td></tr>";
-            $html = $html . "<tr class='bgtr2'><td colspan='2'><b>" . $query[$i]->tipo . "</b></td><td><b>" . $query[$i]->horas . "</b></td></tr>";
+            $html = $html . "<tr class='bgtr'><td colspan='2'>" . $query[$i]->descripcion . "</td><td align='right'><a href='#' class='eliminar_evento' onClick='borrarEvento(" . $query[$i]->IdParte . ",".Input::get('anio').",".Input::get('mes').",".Input::get('dia').");' title='Eliminar este parte'><div  id='evIcono" . $query[$i]->IdParte . "'><img src='" . URL::asset('img/delete.png') . "' height='10' width='10'></div></a></td></tr>";
+            $html = $html . "<tr class='bgtr2'><td colspan='2'><b>" . $query[$i]->tipo . "</b></td><td align='right'><b>" . $query[$i]->horas . "</b></td></tr>";
             $html = $html . "<tr><td colspan='3'><hr/><br/></td></tr>";
         }
         $html = $html.'</table>';

@@ -2,10 +2,10 @@
     <table>
         <tr>
             <td>
-                <h5>Eventos del {{ $fecha }}</h5>
+                <h5>Partes del {{ $fecha }}</h5>
             </td>
             <td>
-                <a href='main' rel='{{ $fecha }}'>
+                <a href='#' onclick="javascript:main('{{ $fecha }}');" rel='{{ $fecha }}'>
                     <img src='{{ URL::asset('img/volver.png') }}' height='10' width='10'>&nbsp;
                 </a>
             </td>
@@ -26,7 +26,11 @@
                                 </td>
                                 <td width="40%">
                                     <label>Horas</label>
-                                    <input type='text' name='evento_horas' id='evento_horas' class='required'><br/>
+                                    <select name='evento_horas' id='evento_horas' class='required'>
+                                        <?php for($i=1;$i<=24;$i++) { ?>
+                                        <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                                        <?php } ?>
+                                    </select>
                                 </td>
                             </tr>
                             <tr>

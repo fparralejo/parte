@@ -101,6 +101,10 @@
         });
     }
     
+    function main(fecha){
+        window.location.href='main?fecha='+fecha;
+    }
+    
     //doy de alta el evento
     function darAltaEvento(){
         var eventoTxt = $("#evento_titulo").val();
@@ -146,23 +150,31 @@
     }
     
     function borrarEvento(id,anio,mes,dia){
-        //cargo gif accion
-        $("#evIcono"+id).html("<img src='{{ URL::asset('img/loading.gif') }}' height='10' width='10'>");
-        
-        $.ajax({
-            type: "GET",
-            url: "borrar_evento",
-            cache: false,
-            data: {id: id, accion: "borrar_evento"}
-        }).done(function (respuesta2)
+        if (confirm("¿Desea borrar el parte?"))
         {
-            $("#respuesta_accion").html(respuesta2);
-            //redibujar toda la pantalla de nuevo con el nuevo evento guardado
-            setTimeout(function ()
+        
+            //cargo gif accion
+            $("#evIcono"+id).html("<img src='{{ URL::asset('img/loading.gif') }}' height='10' width='10'>");
+            $('#formNuevo').hide();
+            $('#dandoAlta').show();
+
+            $.ajax({
+                type: "GET",
+                url: "borrar_evento",
+                cache: false,
+                data: {id: id, accion: "borrar_evento"}
+            }).done(function (respuesta2)
             {
-                evento(dia,mes,anio);
-            }, 3000);
-        });
+                $("#respuesta_accion").html(respuesta2);
+                $('#dandoAlta').hide();
+                //redibujar toda la pantalla de nuevo con el nuevo evento guardado
+                setTimeout(function ()
+                {
+                    evento(dia,mes,anio);
+                }, 3000);
+            });
+        
+        }
     }
     
     function cambiaMes(objeto){
@@ -175,8 +187,19 @@
 
     $(document).ready(function ()
     {
-        /* GENERAMOS CALENDARIO CON FECHA DE HOY */
-        generar_calendario("<?php Input::get("mes"); ?>", "<?php Input::get("anio"); ?>");
+        
+        
+        <?php
+        $mes=Input::get('mes');
+        $anio=Input::get('anio');
+        if(Input::get('fecha')<>''){
+            $fecha=explode('-',Input::get('fecha'));
+            $mes=$fecha[1];
+            $anio=$fecha[2];
+        }
+        ?>
+        /* GENERAMOS CALENDARIO */
+        generar_calendario("<?php echo $mes; ?>", "<?php echo $anio; ?>");
 
 
         /* AGREGAR UN EVENTO */
