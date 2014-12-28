@@ -55,3 +55,14 @@ label.error {position:absolute;left:13px;top:13px;padding:0;width:20px;height:20
     background-color: mistyrose ;
     text-align: left;
 }
+
+li.listadoParte{
+    background-color: antiquewhite;
+    text-align: left;
+    border: 1px #333;
+    border-radius: 10px;
+}
+
+li.listadoParte:hover{
+    background-color: mistyrose;
+}

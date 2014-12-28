@@ -27,3 +27,6 @@ Route::get('listar_evento','CalendarController@listar_evento');
 Route::get('borrar_evento','CalendarController@borrar_evento');
 
 Route::get('evento_nuevo','CalendarController@evento_nuevo');
+Route::get('listarMes','CalendarController@listarMes');
+Route::get('editarParte','CalendarController@editarParte');
+Route::get('editarParteOK','CalendarController@editarParteOK');

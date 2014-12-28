@@ -152,7 +152,6 @@
     function borrarEvento(id,anio,mes,dia){
         if (confirm("¿Desea borrar el parte?"))
         {
-        
             //cargo gif accion
             $("#evIcono"+id).html("<img src='{{ URL::asset('img/loading.gif') }}' height='10' width='10'>");
             $('#formNuevo').hide();
@@ -183,12 +182,86 @@
         generar_calendario(nueva_fecha[1], nueva_fecha[0]);
     }
     
+    function cambiaMesAnio(){
+        var anio = $("#anioc").val();
+        var mes = $("#mesc").val();
+        generar_calendario(mes, anio);
+    }
     
+    function listarMes(mes,anio){
+        var agenda = $(".cal");
+        agenda.html("<img src='{{ URL::asset('img/loading.gif') }}'>");
+        $.ajax({
+            type: "GET",
+            url: "listarMes",
+            cache: false,
+            data: {mes: mes, anio: anio, accion: "listarMes"}
+        }).done(function (respuesta)
+        {
+            agenda.html(respuesta);
+        });
+    }
+    
+    function editarParte(id){
+        var agenda = $(".cal");
+        agenda.html("<img src='{{ URL::asset('img/loading.gif') }}'>");
+        $.ajax({
+            type: "GET",
+            url: "editarParte",
+            cache: false,
+            data: {IdParte: id, accion: "editarParte"}
+        }).done(function (respuesta)
+        {
+            agenda.html(respuesta);
+        });
+    }
+
+    function editarParteOK(){
+        var eventoTxt = $("#evento_titulo").val();
+        var fecha = $("#evento_fecha").val();
+        var horas = $("#evento_horas").val();
+        var tipo = $("#tipo").val();
+        var IdParte = $("#IdParte").val();
+
+        //comprobamos que haya texto en '#evento_titulo'
+        if(eventoTxt!=='' && horas!=='' && tipo!==''){
+            $('#formNuevo').hide();
+            $('#dandoAlta').show();
+
+            $.ajax({
+                type: "GET",
+                url: "editarParteOK",
+                cache: false,
+                data: {IdParte: IdParte, evento: eventoTxt, fecha: fecha, horas: horas, tipo: tipo, accion: "editarParteOK"}
+            }).done(function (respuesta2)
+            {
+                document.getElementById('evento_titulo').value='';
+                document.getElementById('evento_fecha').value='';
+                $("#respuesta_accion").html(respuesta2);
+                $('#dandoAlta').hide();
+                //redibujar toda la pantalla de nuevo con el nuevo evento guardado
+                setTimeout(function ()
+                {
+                    var fechaA=fecha.split('-');
+                    var dia=fechaA[0];
+                    var mes=fechaA[1];
+                    var anio=fechaA[2];
+                    evento(dia,mes,anio);
+                }, 3000);
+            });
+        }else{
+            $("#respuesta_accion").html("<p class='rojo'>Se debe introducir un texto.</p>");
+            //borrar el texto a los 3 segundos
+            setTimeout(function ()
+            {
+                $("#respuesta_accion").html("");
+            }, 3000);
+        }
+    }
+
 
     $(document).ready(function ()
     {
-        
-        
         <?php
         $mes=Input::get('mes');
         $anio=Input::get('anio');
@@ -200,108 +273,8 @@
         ?>
         /* GENERAMOS CALENDARIO */
         generar_calendario("<?php echo $mes; ?>", "<?php echo $anio; ?>");
-
-
-        /* AGREGAR UN EVENTO */
-        //BORRAR, COMPROBAR ANTES CLARO
-//        $(document).on("click", 'a.add', function (e)
-//        {
-//            e.preventDefault();
-//            var id = $(this).data('evento');
-//            var fecha = $(this).attr('rel');
-//
-//            $('#mask').fadeIn(1000).html("<div id='nuevo_evento' class='window' rel='" + fecha + "'>Agregar un evento el " + formatDate(fecha) + "</h2><a href='#' class='close' rel='" + fecha + "'><img src='{{ URL::asset('img/delete.png') }}' height='18' width='18'>&nbsp;</a><div id='respuesta_form'></div><form class='formeventos'><input type='text' name='evento_titulo' id='evento_titulo' class='required'><input type='button' name='Enviar' value='Guardar' class='enviar'><input type='hidden' name='evento_fecha' id='evento_fecha' value='" + fecha + "'></form></div>");
-//        });
-
-//        /* LISTAR EVENTOS DEL DIA */
-//        $(document).on("click", 'a.modal', function (e)
-//        {
-//            e.preventDefault();
-//            var fecha = $(this).attr('rel');
-//            var nuevoHtml = "<form class='formeventos'><input type='text' name='evento_titulo' id='evento_titulo' class='required'><input type='button' name='Enviar' value='Guardar' class='enviar'><input type='hidden' name='evento_fecha' id='evento_fecha' value='" + fecha + "'></form>";
-//
-//
-//            $('#mask').fadeIn(1000).html("<div id='nuevo_evento' class='window' rel='" + fecha + "'>Eventos del " + formatDate(fecha) + "</h2><a href='#' class='close' rel='" + fecha + "'><img src='{{ URL::asset('img/delete.png') }}' height='18' width='18'>&nbsp;</a>" + nuevoHtml + "<div id='respuesta'></div><div id='respuesta_form'></div></div>");
-//            $.ajax({
-//                type: "GET",
-//                url: "listar_evento",
-//                cache: false,
-//                data: {fecha: fecha, accion: "listar_evento"}
-//            }).done(function (respuesta)
-//            {
-//                $("#respuesta_form").html(respuesta);
-//            });
-//
-//        });
-//
-//        $(document).on("click", '.close', function (e)
-//        {
-//            e.preventDefault();
-//            $('#mask').fadeOut();
-//            setTimeout(function ()
-//            {
-//                var fecha = $(".window").attr("rel");
-//                var fechacal = fecha.split("-");
-//                generar_calendario(fechacal[1], fechacal[0]);
-//            }, 500);
-//        });
-//
-//        //guardar evento
-//        $(document).on("click", '.enviar', function (e)
-//        {
-//            e.preventDefault();
-//            if ($("#evento_titulo").valid() == true)
-//            {
-//                $("#respuesta_form").html("<img src='{{ URL::asset('img/loading.gif') }}'>");
-//                var evento = $("#evento_titulo").val();
-//                var fecha = $("#evento_fecha").val();
-//                $.ajax({
-//                    type: "GET",
-//                    url: "guardar_evento",
-//                    cache: false,
-//                    data: {evento: evento, fecha: fecha, accion: "guardar_evento"}
-//                }).done(function (respuesta2)
-//                {
-//                    $("#respuesta_form").html(respuesta2);
-//                    $(".formeventos,.close").hide();
-//                    setTimeout(function ()
-//                    {
-//                        $('#mask').fadeOut('fast');
-//                        var fechacal = fecha.split("-");
-//                        generar_calendario(fechacal[1], fechacal[0]);
-//                    }, 1000);
-//                });
-//            }
-//        });
-//
-//        //eliminar evento
-//        $(document).on("click", '.eliminar_evento', function (e)
-//        {
-//            e.preventDefault();
-//            var current_p = $(this);
-//            $("#respuesta").html("<img src='{{ URL::asset('img/loading.gif') }}'>");
-//            var id = $(this).attr("rel");
-//            $.ajax({
-//                type: "GET",
-//                url: "borrar_evento",
-//                cache: false,
-//                data: {id: id, accion: "borrar_evento"}
-//            }).done(function (respuesta2)
-//            {
-//                $("#respuesta").html(respuesta2);
-//                current_p.parent("p").fadeOut();
-//            });
-//        });
-//
-//        $(document).on("click", ".anterior,.siguiente", function (e)
-//        {
-//            e.preventDefault();
-//            var datos = $(this).attr("rel");
-//            var nueva_fecha = datos.split("-");
-//            generar_calendario(nueva_fecha[1], nueva_fecha[0]);
-//        });
-
     });
+    
 </script>
 
 

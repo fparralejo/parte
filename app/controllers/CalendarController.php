@@ -118,7 +118,7 @@ class CalendarController extends BaseController {
 
 
         //$query = DB::select("select fecha,count(id) as total from partefpp_calendario where month(fecha)='" . $fecha_calendario[1] . "' and year(fecha)='" . $fecha_calendario[0] . "' group by fecha");
-        $query = DB::select("select fecha,count(Id) as total from partefpp_partes where month(fecha)='" . $fecha_calendario[1] . "' and year(fecha)='" . $fecha_calendario[0] . "' and Id=1 and borrado=1 group by fecha");
+        $query = DB::select("select fecha,count(Id) as total from partefpp_partes where month(fecha)='" . $fecha_calendario[1] . "' and year(fecha)='" . $fecha_calendario[0] . "' and Id=".Session::get('Id')." and borrado=1 group by fecha");
 
         $eventos = array();
         for ($i = 0; $i < count($query); $i++) {
@@ -140,10 +140,16 @@ class CalendarController extends BaseController {
         else
             $totalfilas = intval(($tope / 7));
 
+        $mesanterior = date("Y-m-d", mktime(0, 0, 0, $fecha_calendario[1] - 1, 01, $fecha_calendario[0]));
+        $messiguiente = date("Y-m-d", mktime(0, 0, 0, $fecha_calendario[1] + 1, 01, $fecha_calendario[0]));
+        
+        
         /* empezamos a pintar la tabla */
         //lo guardamos en una vble $html
         $html = '';
-        $html = $html . "<h2>" . $meses[intval($fecha_calendario[1])] . " de " . $fecha_calendario[0] . " <abbr title='S&oacute;lo se pueden agregar eventos en d&iacute;as h&aacute;biles y en fechas futuras (o la fecha actual).'></abbr></h2>";
+        $html = $html . "<p class='toggle'><h2><a href='#' onClick='cambiaMes(this);' rel='$mesanterior' class='anterior'>&laquo; </a>" ;
+        $html = $html . "<a href='#' onClick='listarMes(".$fecha_calendario[1].",".$fecha_calendario[0].");'>" . $meses[intval($fecha_calendario[1])] . " - " . $fecha_calendario[0] .'</a>';
+        $html = $html .  "<a href='#' onClick='cambiaMes(this);' class='siguiente' rel='$messiguiente'> &raquo;</a></h2></p>";
         if (isset($mostrar))
             $html = $html . $mostrar;
 
@@ -198,13 +204,61 @@ class CalendarController extends BaseController {
                 }
             }
         }
-        $html = $html . "</table>";
+        $html = $html . "</table><br/><br/>";
         
-        $mesanterior = date("Y-m-d", mktime(0, 0, 0, $fecha_calendario[1] - 1, 01, $fecha_calendario[0]));
-        $messiguiente = date("Y-m-d", mktime(0, 0, 0, $fecha_calendario[1] + 1, 01, $fecha_calendario[0]));
-        $html = $html . "<p class='toggle'>&laquo; <a href='#' onClick='cambiaMes(this);' rel='$mesanterior' class='anterior'>Mes Anterior</a> - <a href='#' onClick='cambiaMes(this);' class='siguiente' rel='$messiguiente'>Mes Siguiente</a> &raquo;</p>";
+        //otros años y meses
+        //select de los meses
+        $selectMeses='';
+        $selectMeses=$selectMeses."<select id='mesc' name='mes'>";
+        $selectMeses=$selectMeses."<option value='1'>Enero</option>";
+        $selectMeses=$selectMeses."<option value='2'>Febrero</option>";
+        $selectMeses=$selectMeses."<option value='3'>Marzo</option>";
+        $selectMeses=$selectMeses."<option value='4'>Abril</option>";
+        $selectMeses=$selectMeses."<option value='5'>Mayo</option>";
+        $selectMeses=$selectMeses."<option value='6'>Junio</option>";
+        $selectMeses=$selectMeses."<option value='7'>Julio</option>";
+        $selectMeses=$selectMeses."<option value='8'>Agosto</option>";
+        $selectMeses=$selectMeses."<option value='9'>Septiembre</option>";
+        $selectMeses=$selectMeses."<option value='10'>Octubre</option>";
+        $selectMeses=$selectMeses."<option value='11'>Noviembre</option>";
+        $selectMeses=$selectMeses."<option value='12'>Diciembre</option>";
+        $selectMeses=$selectMeses."</select>";
 
-        //return View::make('calendar',array('html'=>$html));
+        //select de los años
+        $selectAnio='';
+        $selectAnio=$selectAnio."<select id='anioc' name='anio'>";
+        $selectAnio=$selectAnio."<option value='2014'>2014</option>";
+        $selectAnio=$selectAnio."<option value='2015'>2015</option>";
+        $selectAnio=$selectAnio."<option value='2016'>2016</option>";
+        $selectAnio=$selectAnio."<option value='2017'>2017</option>";
+        $selectAnio=$selectAnio."<option value='2018'>2018</option>";
+        $selectAnio=$selectAnio."</select>";
+
+        
+        
+        //lo incluyo en una tabla nueva
+        $html = $html . "<form>";
+        $html = $html . "<table cellspacing='0' cellpadding='0'>";
+        $html = $html . "<tr>";
+        $html = $html . "<td colspan='3'>";
+        $html = $html . "<p class='toggle'>Ir a...</p>";
+        $html = $html . "</td>";
+        $html = $html . "</tr>";
+        $html = $html . "<tr>";
+        $html = $html . "<td width='40%'>";
+        $html = $html . $selectMeses;
+        $html = $html . "</td>";
+        $html = $html . "<td width='25%'>";
+        $html = $html . $selectAnio;
+        $html = $html . "</td>";
+        $html = $html . "<td width='15%'>";
+        $html = $html . "<a href='#' onClick='cambiaMesAnio();' class='anterior'><img src='". URL::asset('img/Ok.png') ."' height='16' width='16'></a>";
+        $html = $html . "</td>";
+        $html = $html . "</tr>";
+        $html = $html . "</table>";
+        $html = $html . "</form>";
+        
+        
         return $html;
     }
     
@@ -214,6 +268,31 @@ class CalendarController extends BaseController {
         $listar_eventos=$this->listar_evento();
         
         return View::make('eventos', array('fecha' => $fecha,'listar_eventos' => $listar_eventos));
+    }
+    
+    function listarMes(){
+        $fecha='01-'.Input::get('mes').'-'.Input::get('anio');
+        $query = DB::select("select IdParte,fecha,tipo,horas,descripcion from partefpp_partes where month(fecha)='" . Input::get('mes') . "' and year(fecha)='" . Input::get('anio') . "' and Id=".Session::get('Id')." and borrado=1 group by fecha");
+        
+        $html = "<ul>";
+        
+        $eventos = array();
+        for ($i = 0; $i < count($query); $i++) {
+            $html = $html . "<li class='listadoParte'><a href='#' onclick='editarParte(" . $query[$i]->IdParte . ");'>";
+            $html = $html . "Fecha: ".$query[$i]->fecha.'<br/>';
+            $html = $html . "Tipo: ".$query[$i]->tipo.'<br/>';
+            $html = $html . "Horas: ".$query[$i]->horas.'<br/>';
+            $html = $html . "Descripción: ".$query[$i]->descripcion.'<br/>';
+            $html = $html . "</a></li>";
+            $html = $html . "<li>&nbsp;</li>";
+        }
+        $html = $html . "</ul>";
+        
+        $html = $html . '<a href="#" onclick="javascript:main(\''. $fecha .'\');" rel="'. $fecha .'">';
+        $html = $html . '<img src="'. URL::asset('img/volver.png') .'" height="10" width="10">&nbsp';
+        $html = $html . '</a>';
+        
+        return $html;
     }
 
     //BORRAR 26-12-2014
@@ -246,6 +325,28 @@ class CalendarController extends BaseController {
         return $html;
     }
 
+    public function editarParteOK() {
+        $parte = parte::find(Input::get("IdParte"));
+        
+        $fecha=explode('-',Input::get("fecha"));
+        $fecha=$fecha[2].'-'.$fecha[1].'-'.$fecha[0];
+        
+        $parte->fecha = $fecha;
+        $parte->descripcion = strip_tags(Input::get("evento"));
+        $parte->tipo = Input::get("tipo");
+        $parte->horas = Input::get("horas");
+        $parte->Id = Session::get("Id");
+        $parte->borrado = "1";
+
+        $html = '';
+        if ($parte->save()) {
+            $html = $html . "<p class='ok'>Parte editado correctamente.</p>";
+        } else {
+            $html = $html . "<p class='error'>Se ha producido un error editando el parte.</p>";
+        }
+        return $html;
+    }
+
     //esta funcion la llama evento_nuevo()
     public function listar_evento() {
         $fecha=Input::get('anio')."-".Input::get('mes')."-".Input::get('dia');
@@ -256,15 +357,11 @@ class CalendarController extends BaseController {
                         ->orderBy('IdParte', 'asc')
                         ->get();
         
-//        $query = calendario::where('fecha', '=', $fecha)
-//                ->orderBy('id', 'asc')
-//                ->get();
-
         $html = '<table>';
         $html = $html.'<tr><td colspan="3"><b>Listado de Partes</b></td></tr>';
         for ($i = 0; $i < count($query); $i++) {
-            $html = $html . "<tr class='bgtr'><td colspan='2'>" . $query[$i]->descripcion . "</td><td align='right'><a href='#' class='eliminar_evento' onClick='borrarEvento(" . $query[$i]->IdParte . ",".Input::get('anio').",".Input::get('mes').",".Input::get('dia').");' title='Eliminar este parte'><div  id='evIcono" . $query[$i]->IdParte . "'><img src='" . URL::asset('img/delete.png') . "' height='10' width='10'></div></a></td></tr>";
-            $html = $html . "<tr class='bgtr2'><td colspan='2'><b>" . $query[$i]->tipo . "</b></td><td align='right'><b>" . $query[$i]->horas . "</b></td></tr>";
+            $html = $html . "<tr class='bgtr'><td colspan='2'><a href='#' onclick='editarParte(" . $query[$i]->IdParte . ");'>" . $query[$i]->descripcion . "</a></td><td align='right'><a href='#' class='eliminar_evento' onClick='borrarEvento(" . $query[$i]->IdParte . ",".Input::get('anio').",".Input::get('mes').",".Input::get('dia').");' title='Eliminar este parte'><div  id='evIcono" . $query[$i]->IdParte . "'><img src='" . URL::asset('img/delete.png') . "' height='10' width='10'></div></a></td></tr>";
+            $html = $html . "<tr class='bgtr2'><td colspan='2'><a href='#' onclick='editarParte(" . $query[$i]->IdParte . ");'><b>" . $query[$i]->tipo . "</b></td><td align='right'><b>" . $query[$i]->horas . "</b></a></td></tr>";
             $html = $html . "<tr><td colspan='3'><hr/><br/></td></tr>";
         }
         $html = $html.'</table>';
@@ -285,6 +382,18 @@ class CalendarController extends BaseController {
             $html = $html . "<p class='error'>Se ha producido un error eliminando el parte.</p>";
         }
         return $html;
+    }
+    
+    function editarParte(){
+        //$datos_parte=parte::find(Input::get('IdParte'));
+        $datos_parte = parte::where('IdParte', '=', Input::get('IdParte'))
+                ->where('borrado', '=', '1')
+                ->get();
+        
+        $fecha=explode('-',$datos_parte[0]->fecha);
+        $fecha=$fecha[2].'-'.$fecha[1].'-'.$fecha[0];
+        
+        return View::make('editar', array('datos_parte' => $datos_parte,'fecha' => $fecha));
     }
 
 }
