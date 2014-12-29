@@ -202,7 +202,25 @@
         }
     }
 
+    function buscar(){
+        var agenda = $(".cal");
+        agenda.html("<img src='{{ URL::asset('img/loading.gif') }}'>");
+        $.ajax({
+            type: "GET",
+            url: "buscar",
+            cache: false,
+            data: {accion: "buscar"}
+        }).done(function (respuesta)
+        {
+            agenda.html(respuesta);
+        });
+    }
+
+
+
     function buscarOK(){
+        var agenda = $(".cal");
+        agenda.html("<img src='{{ URL::asset('img/loading.gif') }}'>");
         var buscar = $("#buscar_txt").val();
     
         $.ajax({
@@ -212,10 +230,10 @@
             data: {buscar: buscar, accion: "buscarOK"}
         }).done(function (respuesta2)
         {
-            document.getElementById('buscar').value='';
-            $("#respuesta_accion").html(respuesta2);
-            $('#formeventos_b').hide();
-            $('#dandoAlta_b').hide();
+//            document.getElementById('buscar').value='';
+            $(".cal").html(respuesta2);
+//            $('#formNuevo_b').hide();
+//            $('#dandoAlta_b').hide();
         });
     }
     
@@ -249,7 +267,7 @@
 
 <nav id="nav">
     <ul>
-        <li><a class="icon fa-bar-chart-o" href="buscar"><span>Buscar</span></a></li>
+        <li><a class="icon fa-bar-chart-o" href="javascript:buscar();"><span>Buscar</span></a></li>
         <li><a class="icon fa-home" href="logout"><span>Salir</span></a></li>
     </ul>
 

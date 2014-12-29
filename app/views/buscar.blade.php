@@ -1,8 +1,4 @@
-@extends('calendar')
-
-
-@section('content')
-<div id='buscar'>
+<div class='cal'>
     <table>
         <tr>
             <td>
@@ -16,8 +12,8 @@
         </tr>
         <tr>
             <td>
-                <div id="formNuevo">
-                    <form class='formeventos_b'>
+                <div id="formNuevo_b">
+                    <form class='formeventos'>
                         <table>
                             <tr>
                                 <td colspan="2">
@@ -47,4 +43,3 @@
         </tr>
     </table>
 </div>
-@stop

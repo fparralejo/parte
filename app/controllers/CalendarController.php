@@ -405,14 +405,6 @@ class CalendarController extends BaseController {
                       })
                       ->get();
             
-//        echo 'Listado<br/>';print_r($query);    
-                      
-//        $query=parte::raw("(tipo LIKE '%$termino%' OR descripcion LIKE '%$termino%')")
-//                      ->where('Id','=', Session::get('Id'))
-//                      ->where('borrado', '=', "1")
-//                      ->get();
-
-        
         return $this->htmlListado($query,date('d-m-Y'));
     }
 }
