@@ -30,3 +30,6 @@ Route::get('evento_nuevo','CalendarController@evento_nuevo');
 Route::get('listarMes','CalendarController@listarMes');
 Route::get('editarParte','CalendarController@editarParte');
 Route::get('editarParteOK','CalendarController@editarParteOK');
+
+Route::get('buscar','CalendarController@buscar');
+Route::get('buscarOK','CalendarController@buscarOK');

@@ -1,18 +1,6 @@
 <?php
 
 class CalendarController extends BaseController {
-    /*
-      |--------------------------------------------------------------------------
-      | Default Home Controller
-      |--------------------------------------------------------------------------
-      |
-      | You may wish to use controllers instead of, or in addition to, Closure
-      | based routes. That's great! Here is an example controller method to
-      | get you started. To route to this controller, just add the route:
-      |
-      |	Route::get('/', 'HomeController@showWelcome');
-      |
-     */
 
     public function login() {
         return View::make('login');
@@ -272,17 +260,21 @@ class CalendarController extends BaseController {
     
     function listarMes(){
         $fecha='01-'.Input::get('mes').'-'.Input::get('anio');
-        $query = DB::select("select IdParte,fecha,tipo,horas,descripcion from partefpp_partes where month(fecha)='" . Input::get('mes') . "' and year(fecha)='" . Input::get('anio') . "' and Id=".Session::get('Id')." and borrado=1 group by fecha");
-        
-        $html = "<ul>";
-        
-        $eventos = array();
+        $query = DB::select("select IdParte,fecha,tipo,horas,descripcion from partefpp_partes where month(fecha)='" . Input::get('mes') . "' and year(fecha)='" . Input::get('anio') . "' and Id=".Session::get('Id')." and borrado=1 order by fecha");
+
+        return $this->htmlListado($query,$fecha);
+    }
+    
+    private function htmlListado($query,$fecha){
+        $html='<ul>';
         for ($i = 0; $i < count($query); $i++) {
+            $fecha = explode('-',$query[$i]->fecha);
+            $fecha = $fecha[2].'-'.$fecha[1].'-'.$fecha[0];
             $html = $html . "<li class='listadoParte'><a href='#' onclick='editarParte(" . $query[$i]->IdParte . ");'>";
-            $html = $html . "Fecha: ".$query[$i]->fecha.'<br/>';
-            $html = $html . "Tipo: ".$query[$i]->tipo.'<br/>';
-            $html = $html . "Horas: ".$query[$i]->horas.'<br/>';
-            $html = $html . "Descripción: ".$query[$i]->descripcion.'<br/>';
+            $html = $html . "Fecha: <b>".$fecha.'</b><br/>';
+            $html = $html . "Tipo: <b>".$query[$i]->tipo.'</b><br/>';
+            $html = $html . "Horas: <b>".$query[$i]->horas.'</b><br/>';
+            $html = $html . "Descripción: <b>".$query[$i]->descripcion.'</b><br/>';
             $html = $html . "</a></li>";
             $html = $html . "<li>&nbsp;</li>";
         }
@@ -385,7 +377,6 @@ class CalendarController extends BaseController {
     }
     
     function editarParte(){
-        //$datos_parte=parte::find(Input::get('IdParte'));
         $datos_parte = parte::where('IdParte', '=', Input::get('IdParte'))
                 ->where('borrado', '=', '1')
                 ->get();
@@ -396,4 +387,20 @@ class CalendarController extends BaseController {
         return View::make('editar', array('datos_parte' => $datos_parte,'fecha' => $fecha));
     }
 
+    function buscar(){
+        return View::make('buscar');
+    }
+    
+    function buscarOK(){
+        //hacer una busqueda en los campos tipo y descripcion
+        $termino=Input::get('buscar');
+        
+        $query=parte::raw("(tipo LIKE '%$termino%' OR descripcion LIKE '%$termino%')")
+                      ->where('Id','=', Session::get('Id'))
+                      ->where('borrado', '=', "1")
+                      ->get();
+
+        
+        return $this->htmlListado($query,date('d-m-Y'));
+    }
 }

@@ -8,63 +8,6 @@
 
 <link type="text/css" rel="stylesheet" media="all" href="{{ URL::asset('css/estilos.css') }}">
 <script>
-
-</script>
-<style>
-</style>
-
-
-@stop
-
-@section('menu')
-
-<nav id="nav">
-    <ul>
-        <li><a class="icon fa-home" href="logout"><span>Salir</span></a></li>
-    </ul>
-
-
-
-    <!--    <ul>
-            <li><a class="icon fa-home" href="index.html"><span>Introduction</span></a></li>
-            <li>
-                <a href="" class="icon fa-bar-chart-o"><span>Dropdown</span></a>
-                <ul>
-                    <li><a href="#">Lorem ipsum dolor</a></li>
-                    <li><a href="#">Magna phasellus</a></li>
-                    <li><a href="#">Etiam dolore nisl</a></li>
-                    <li>
-                        <a href="">Phasellus consequat</a>
-                        <ul>
-                            <li><a href="#">Magna phasellus</a></li>
-                            <li><a href="#">Etiam dolore nisl</a></li>
-                            <li><a href="#">Phasellus consequat</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#">Veroeros feugiat</a></li>
-                </ul>
-            </li>
-            <li><a class="icon fa-cog" href="left-sidebar.html"><span>Left Sidebar</span></a></li>
-            <li><a class="icon fa-retweet" href="right-sidebar.html"><span>Right Sidebar</span></a></li>
-            <li><a class="icon fa-sitemap" href="no-sidebar.html"><span>No Sidebar</span></a></li>-->
-</ul>
-</nav>
-@stop
-
-
-
-
-@section('content')
-
-<div class="calendario_ajax">
-    <div class="cal"></div><div id="mask"></div>
-</div>
-
-<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.12.0/jquery.validate.min.js"></script>
-<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.12.0/localization/messages_es.js "></script>
-
-<script>
     function generar_calendario(mes, anio)
     {
         var agenda = $(".cal");
@@ -259,6 +202,26 @@
         }
     }
 
+    function buscarOK(){
+        var buscar = $("#buscar_txt").val();
+    
+        $.ajax({
+            type: "GET",
+            url: "buscarOK",
+            cache: false,
+            data: {buscar: buscar, accion: "buscarOK"}
+        }).done(function (respuesta2)
+        {
+            document.getElementById('buscar').value='';
+            $("#respuesta_accion").html(respuesta2);
+            $('#formeventos_b').hide();
+            $('#dandoAlta_b').hide();
+        });
+    }
+    
+    
+    
+
 
     $(document).ready(function ()
     {
@@ -275,6 +238,63 @@
         generar_calendario("<?php echo $mes; ?>", "<?php echo $anio; ?>");
     });
     
+</script>
+<style>
+</style>
+
+
+@stop
+
+@section('menu')
+
+<nav id="nav">
+    <ul>
+        <li><a class="icon fa-bar-chart-o" href="buscar"><span>Buscar</span></a></li>
+        <li><a class="icon fa-home" href="logout"><span>Salir</span></a></li>
+    </ul>
+
+
+
+    <!--    <ul>
+            <li><a class="icon fa-home" href="index.html"><span>Introduction</span></a></li>
+            <li>
+                <a href="" class="icon fa-bar-chart-o"><span>Dropdown</span></a>
+                <ul>
+                    <li><a href="#">Lorem ipsum dolor</a></li>
+                    <li><a href="#">Magna phasellus</a></li>
+                    <li><a href="#">Etiam dolore nisl</a></li>
+                    <li>
+                        <a href="">Phasellus consequat</a>
+                        <ul>
+                            <li><a href="#">Magna phasellus</a></li>
+                            <li><a href="#">Etiam dolore nisl</a></li>
+                            <li><a href="#">Phasellus consequat</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Veroeros feugiat</a></li>
+                </ul>
+            </li>
+            <li><a class="icon fa-cog" href="left-sidebar.html"><span>Left Sidebar</span></a></li>
+            <li><a class="icon fa-retweet" href="right-sidebar.html"><span>Right Sidebar</span></a></li>
+            <li><a class="icon fa-sitemap" href="no-sidebar.html"><span>No Sidebar</span></a></li>-->
+</ul>
+</nav>
+@stop
+
+
+
+
+@section('content')
+
+<div class="calendario_ajax">
+    <div class="cal"></div><div id="mask"></div>
+</div>
+
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.12.0/jquery.validate.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.12.0/localization/messages_es.js "></script>
+
+<script>
 </script>
 
 
