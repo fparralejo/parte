@@ -162,7 +162,7 @@
     function editarParteOK(){
         var eventoTxt = $("#evento_titulo").val();
         var fecha = $("#evento_fecha").val();
-        var horas = $("#evento_horas").val();
+        var horas = $("#evento_horas_e").val();
         var tipo = $("#tipo").val();
         var IdParte = $("#IdParte").val();
 
