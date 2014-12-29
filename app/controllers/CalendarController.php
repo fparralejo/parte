@@ -394,11 +394,23 @@ class CalendarController extends BaseController {
     function buscarOK(){
         //hacer una busqueda en los campos tipo y descripcion
         $termino=Input::get('buscar');
+
         
-        $query=parte::raw("(tipo LIKE '%$termino%' OR descripcion LIKE '%$termino%')")
-                      ->where('Id','=', Session::get('Id'))
-                      ->where('borrado', '=', "1")
+        $query=parte::where('Id','=', Session::get('Id'))
+                      ->where('borrado','=', "1")
+                      ->where(function($query2) use ($termino)
+                      {
+                        $query2->where('tipo', 'LIKE', "%$termino%")
+                               ->orWhere('descripcion', 'LIKE', "%$termino%");
+                      })
                       ->get();
+            
+//        echo 'Listado<br/>';print_r($query);    
+                      
+//        $query=parte::raw("(tipo LIKE '%$termino%' OR descripcion LIKE '%$termino%')")
+//                      ->where('Id','=', Session::get('Id'))
+//                      ->where('borrado', '=', "1")
+//                      ->get();
 
         
         return $this->htmlListado($query,date('d-m-Y'));
