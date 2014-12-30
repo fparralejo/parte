@@ -3,6 +3,7 @@
 class CalendarController extends BaseController {
 
     public function login() {
+        Session::flush();
         return View::make('login');
     }
 

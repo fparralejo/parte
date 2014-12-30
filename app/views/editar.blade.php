@@ -28,7 +28,7 @@
                                     <label>Horas</label>
                                     <select name='evento_horas' id='evento_horas_e' class='required'>
                                         <?php for($i=1;$i<=24;$i++) { ?>
-                                        <option value="<?php echo $i; ?>" <?php if($datos_parte[0]->horas===(string)$i){echo 'selected';}?>><?php echo $i; ?></option>
+                                        <option value="<?php echo $i; ?>" <?php if((int)$datos_parte[0]->horas===$i){echo 'selected';}?>><?php echo $i; ?></option>
                                         <?php } ?>
                                     </select>
                                 </td>
