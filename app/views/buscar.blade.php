@@ -17,7 +17,7 @@
                         <table>
                             <tr>
                                 <td colspan="2">
-                                    <input type='text' name='buscar_txt' id='buscar_txt' class='required'>
+                                    <input type='text' name='buscar_txt' id='buscar_txt_b' class='required'>
                                 <td>
                             </tr>
                             <tr>

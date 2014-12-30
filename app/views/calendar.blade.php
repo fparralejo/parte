@@ -219,9 +219,9 @@
 
 
     function buscarOK(){
+        var buscar = $("#buscar_txt_b").val();
         var agenda = $(".cal");
         agenda.html("<img src='{{ URL::asset('img/loading.gif') }}'>");
-        var buscar = $("#buscar_txt").val();
     
         $.ajax({
             type: "GET",
@@ -230,10 +230,7 @@
             data: {buscar: buscar, accion: "buscarOK"}
         }).done(function (respuesta2)
         {
-//            document.getElementById('buscar').value='';
             $(".cal").html(respuesta2);
-//            $('#formNuevo_b').hide();
-//            $('#dandoAlta_b').hide();
         });
     }
     
