@@ -1,8 +1,5 @@
 <!DOCTYPE HTML>
-<!--[if lt IE 7 ]><html class="ie ie6" lang="es"> <![endif]-->
-<!--[if IE 7 ]><html class="ie ie7" lang="es"> <![endif]-->
-<!--[if IE 8 ]><html class="ie ie8" lang="es"> <![endif]-->
-<!--[if (gte IE 9)|!(IE)]><!--><html lang="es"> <!--<![endif]-->
+<html>
     <head>
         <title>Partes</title>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
@@ -17,18 +14,10 @@
         <script src="js/skel.min.js"></script>
         <script src="js/skel-layers.min.js"></script>
         <script src="js/init.js"></script>
-        
-        
-<!--        <link href='fullcalendar/fullcalendar.css' rel='stylesheet' />
-        <link href='fullcalendar/fullcalendar.print.css' rel='stylesheet' media='print' />
-        <script src='fullcalendar/lib/moment.min.js'></script>
-        <script src='fullcalendar/lib/jquery.min.js'></script>
-        <script src='fullcalendar/fullcalendar.min.js'></script>-->
-        
         <noscript>
-        <link rel="stylesheet" href="css/skel.css" />
-        <link rel="stylesheet" href="css/style.css" />
-        <link rel="stylesheet" href="css/style-desktop.css" />
+            <link rel="stylesheet" href="css/skel.css" />
+            <link rel="stylesheet" href="css/style.css" />
+            <link rel="stylesheet" href="css/style-desktop.css" />
         </noscript>
         <!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
         
@@ -60,12 +49,20 @@
         <div id="main-wrapper">
             <div id="main" class="container">
                 <div class="row">
-                    
+
                     @yield('content')
-                    
+
                 </div>
             </div>
         </div>
 
+        <div id="footer-wrapper">
+            <div id="copyright" clas="container">
+                <ul class="links">
+                    <li>Francisco Parralejo V1.0 Enero-2015</li>
+                </ul>
+            </div>
+        </div>
+        
     </body>
 </html>

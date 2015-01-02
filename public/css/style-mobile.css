@@ -191,6 +191,7 @@
 
 		#navPanel .link
 		{
+                        text-align: left;
 			display: block;
 			color: #ddd;
 			text-decoration: none;
