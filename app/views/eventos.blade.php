@@ -6,7 +6,7 @@
             </td>
             <td>
                 <a href='#' onclick="javascript:main('{{ $fecha }}');" rel='{{ $fecha }}'>
-                    <img src='{{ URL::asset('img/volver.png') }}' height='10' width='10'>&nbsp;
+                    <img src='{{ URL::asset('img/volver.png') }}' height='18' width='18'>&nbsp;
                 </a>
             </td>
         </tr>

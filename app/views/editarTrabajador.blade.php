@@ -6,7 +6,7 @@
             </td>
             <td>
                 <a href='#' onclick="javascript:main('{{ date('d-m-Y') }}');">
-                    <img src='{{ URL::asset('img/volver.png') }}' height='10' width='10'>&nbsp;
+                    <img src='{{ URL::asset('img/volver.png') }}' height='18' width='18'>&nbsp;
                 </a>
             </td>
         </tr>
@@ -47,11 +47,18 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="2">
-                                    <br/>
-                                    <input type='button' name='Enviar' value='  OK  ' onClick="editarTrabajadorOK();">
-                                    <input type='button' name='borrar' value=' Borrar ' onClick="borrarTrabajadorOK('{{ $usuario->Id }}');">
-                                    <input type='hidden' name='Id' id='Id' value='{{ $usuario->Id }}'>
+                                <td style="width:50%">
+                                    <div align="center">
+                                        <br/>
+                                        <input type='button' name='Enviar' value='  OK  ' onClick="editarTrabajadorOK();">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div align="center">
+                                        <br/>
+                                        <input type='button' name='borrar' value=' Borrar ' onClick="borrarTrabajadorOK('{{ $usuario->Id }}');">
+                                        <input type='hidden' name='Id' id='Id' value='{{ $usuario->Id }}'>
+                                    </div>
                                 </td>
                             </tr>
                         </table>

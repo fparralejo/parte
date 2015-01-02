@@ -54,7 +54,7 @@ class CalendarController extends BaseController {
 
             return Redirect::to('main');
         } else {
-            return $this->login()->with('error', 'Nick o clave incorrectos.');
+            return $this->login()->with('error', '<font color="#ff0000">Nick o clave incorrectos.</font>');
         }
     }
 
@@ -282,7 +282,7 @@ class CalendarController extends BaseController {
         $html = $html . "</ul>";
         
         $html = $html . '<a href="#" onclick="javascript:main(\''. $fecha .'\');" rel="'. $fecha .'">';
-        $html = $html . '<img src="'. URL::asset('img/volver.png') .'" height="10" width="10">&nbsp';
+        $html = $html . '<img src="'. URL::asset('img/volver.png') .'" height="18" width="18">&nbsp';
         $html = $html . '</a>';
         
         return $html;
@@ -433,7 +433,7 @@ class CalendarController extends BaseController {
 
         
         $html = '<a href="#" onclick="javascript:main(\''. date('d-m-Y') .'\');" rel="'. date('d-m-Y') .'">';
-        $html = $html . '<img src="'. URL::asset('img/volver.png') .'" height="10" width="10">&nbsp';
+        $html = $html . '<img src="'. URL::asset('img/volver.png') .'" height="18" width="18">&nbsp';
         $html = $html . '</a><br/><br/>';
         
         $html = $html . "<b>Listado $tipo</b>";

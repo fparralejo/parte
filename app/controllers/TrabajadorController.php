@@ -9,7 +9,7 @@ class TrabajadorController extends BaseController {
         
 
         $html = '<a href="#" onclick="javascript:main(\''. date('d-m-Y') .'\');" rel="'. date('d-m-Y') .'">';
-        $html = $html . '<img src="'. URL::asset('img/volver.png') .'" height="10" width="10">&nbsp';
+        $html = $html . '<img src="'. URL::asset('img/volver.png') .'" height="18" width="18">&nbsp';
         $html = $html . '</a><br/><br/>';
         
         $html = $html . "<b>Listado Trabajadores</b>";

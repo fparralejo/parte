@@ -460,7 +460,7 @@
             </ul>
         </li>
         @endif
-        <li><a class="icon fa-home" href="logout"><span>Salir</span></a></li>
+        <li><a class="icon fa-close" href="logout"><span>Salir</span></a></li>
     </ul>
 </nav>
 @stop

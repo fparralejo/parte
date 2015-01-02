@@ -17,7 +17,7 @@
     {{ Form::label('password', 'Clave'); }} 
     {{ Form::password('password'); }}
     <br/>
-    {{ Form::submit('Entrar'); }}
+    {{ Form::submit('  Entrar  '); }}
  
 {{ Form::close() }}
 

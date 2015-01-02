@@ -31,6 +31,7 @@
 
                 <!-- Logo -->
                 @if(Session::has('nombre') && Session::has('apellidos') && Session::has('rol'))
+                <a class="icon fa-close salir" href="logout"></a>
                 @else
                 <h1 id="logo"><a href="{{ URL::to('/') }}">Partes</a></h1>
                 @endif
