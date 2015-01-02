@@ -217,7 +217,7 @@ class CalendarController extends BaseController {
         $selectAnio='';
         $selectAnio=$selectAnio."<select id='anioc' name='anio'>";
         $selectAnio=$selectAnio."<option value='2014'>2014</option>";
-        $selectAnio=$selectAnio."<option value='2015'>2015</option>";
+        $selectAnio=$selectAnio."<option value='2015' selected>2015</option>";
         $selectAnio=$selectAnio."<option value='2016'>2016</option>";
         $selectAnio=$selectAnio."<option value='2017'>2017</option>";
         $selectAnio=$selectAnio."<option value='2018'>2018</option>";
@@ -286,14 +286,6 @@ class CalendarController extends BaseController {
         $html = $html . '</a>';
         
         return $html;
-    }
-
-    //BORRAR 26-12-2014
-    private function fecha($valor) {
-        $timer = explode(" ", $valor);
-        $fecha = explode("-", $timer[0]);
-        $fechex = $fecha[2] . "/" . $fecha[1] . "/" . $fecha[0];
-        return $fechex;
     }
 
     public function guardar_evento() {
@@ -379,8 +371,8 @@ class CalendarController extends BaseController {
     
     function editarParte(){
         $datos_parte = parte::where('IdParte', '=', Input::get('IdParte'))
-                ->where('borrado', '=', '1')
-                ->get();
+                      ->where('borrado', '=', '1')
+                      ->get();
         
         $fecha=explode('-',$datos_parte[0]->fecha);
         $fecha=$fecha[2].'-'.$fecha[1].'-'.$fecha[0];
@@ -407,5 +399,58 @@ class CalendarController extends BaseController {
                       ->get();
             
         return $this->htmlListado($query,date('d-m-Y'));
+    }
+    
+    public function listadoTipo() {
+        //preparo el form para listar
+        $tipo=Input::get('tipo');
+        
+        return View::make('listarTipo', array('tipo' => $tipo));
+    }
+    
+    public function listadoTipoOK() {
+        //recojo los get de tipo(Trabajo, Vacaciones o Baja) y campo1(filtro para listar)
+        $tipo=Input::get('tipo');
+        $campo1=Input::get('campo1');
+        
+        //si $tipo es Vacaciones o Baja en $campo1 viene el año, se filtra por fecha
+        //si $tipo es trabajo se filtra por descripcion y por defecto el año actual
+
+        $query='';
+        if($tipo==='Vacaciones' || $tipo==='Baja'){
+            $query=parte::where('Id','=', Session::get('Id'))
+                          ->where('borrado','=', "1")
+                          ->where('tipo','=', $tipo)
+                          ->where(DB::raw("year(fecha)"),'=', $campo1)
+                          ->get();
+        }else if($tipo==='Trabajo'){
+            $query=parte::where('Id','=', Session::get('Id'))
+                          ->where('borrado','=', "1")
+                          ->where('tipo','=', $tipo)
+                          ->where('descripcion','LIKE', "%$campo1%")
+                          ->get();
+        }
+
+        
+        $html = '<a href="#" onclick="javascript:main(\''. date('d-m-Y') .'\');" rel="'. date('d-m-Y') .'">';
+        $html = $html . '<img src="'. URL::asset('img/volver.png') .'" height="10" width="10">&nbsp';
+        $html = $html . '</a><br/><br/>';
+        
+        $html = $html . "<b>Listado $tipo</b>";
+        $html = $html . '<ul>';
+        for ($i = 0; $i < count($query); $i++) {
+            $fecha = explode('-',$query[$i]->fecha);
+            $fecha = $fecha[2].'-'.$fecha[1].'-'.$fecha[0];
+            $html = $html . "<li class='listadoParte'>";
+            $html = $html . "Fecha: <b>".$fecha.'  </b>';
+            $html = $html . "Horas: <b>".$query[$i]->horas.'</b><br/>';
+            $html = $html . "Descripción: <b>".$query[$i]->descripcion.'</b><br/>';
+            $html = $html . "</li>";
+            $html = $html . "<li>&nbsp;</li>";
+        }
+        $html = $html . "</ul>";
+        
+        
+        return $html;
     }
 }

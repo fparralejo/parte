@@ -37,7 +37,7 @@
                                 <td colspan="2">
                                     <label>Descripción</label>
                                     <input type='text' name='evento_titulo' id='evento_titulo' class='required' value="{{ $datos_parte[0]->descripcion }}">
-                                <td>
+                                </td>
                             </tr>
                             <tr>
                                 <td colspan="2">
@@ -45,7 +45,7 @@
                                     <input type='button' name='Enviar' value='  OK  ' onClick="editarParteOK();">
                                     <input type='hidden' name='evento_fecha' id='evento_fecha' value='{{ $fecha }}'>
                                     <input type='hidden' name='IdParte' id='IdParte' value='{{ $datos_parte[0]->IdParte }}'>
-                                <td>
+                                </td>
                             </tr>
                         </table>
                     </form>

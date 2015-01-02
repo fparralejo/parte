@@ -33,3 +33,15 @@ Route::get('editarParteOK','CalendarController@editarParteOK');
 
 Route::get('buscar','CalendarController@buscar');
 Route::get('buscarOK','CalendarController@buscarOK');
+
+//listados
+Route::get('listadoTipo','CalendarController@listadoTipo');
+Route::get('listadoTipoOK','CalendarController@listadoTipoOK');
+
+//Trabajador
+Route::get('listadoTrab','TrabajadorController@listadoTrab');
+Route::get('editarTrab','TrabajadorController@editarTrab');
+Route::get('editarTrabOK','TrabajadorController@editarTrabOK');
+Route::get('borrarTrabajadorOK','TrabajadorController@borrarTrabajadorOK');
+Route::get('altaTrab','TrabajadorController@altaTrab');
+Route::get('altaTrabOK','TrabajadorController@altaTrabOK');
