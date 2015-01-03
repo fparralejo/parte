@@ -112,7 +112,7 @@ class TrabajadorController extends BaseController {
             $usuario->nombre=Input::get('nombre');
             $usuario->apellidos=Input::get('apellidos');
             $usuario->fecha=date('Y-m-d');
-            $usuario->rol=Input::get('apellidos');
+            $usuario->rol=Input::get('rol');
             $usuario->borrado='1';
             $usuario->save();
 
