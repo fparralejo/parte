@@ -453,4 +453,13 @@ class CalendarController extends BaseController {
         
         return $html;
     }
+    
+    public function ayuda() {
+        return View::make('ayuda');
+    }
+    
+    public function parteAlta() {
+        return View::make('videos_ayuda.parte_alta');
+    }
+    
 }

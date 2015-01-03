@@ -45,3 +45,7 @@ Route::get('editarTrabOK','TrabajadorController@editarTrabOK');
 Route::get('borrarTrabajadorOK','TrabajadorController@borrarTrabajadorOK');
 Route::get('altaTrab','TrabajadorController@altaTrab');
 Route::get('altaTrabOK','TrabajadorController@altaTrabOK');
+
+//ayuda
+Route::get('ayuda','CalendarController@ayuda');
+Route::get('parte_alta','CalendarController@parteAlta');

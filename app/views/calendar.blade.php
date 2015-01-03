@@ -415,6 +415,23 @@
         }
     }
     
+    function ayuda(){
+        var agenda = $(".cal");
+        agenda.html("<img src='{{ URL::asset('img/loading.gif') }}'>");
+
+        $.ajax({
+            type: "GET",
+            url: "ayuda",
+            cache: false,
+            data: {accion: "ayuda"}
+        }).done(function (respuesta)
+        {
+            $(".cal").html(respuesta);
+        });
+    }
+    
+    
+    
 
     $(document).ready(function ()
     {
@@ -460,6 +477,7 @@
             </ul>
         </li>
         @endif
+        <li><a class="icon fa-close" href="javascript:ayuda();"><span>Ayuda</span></a></li>
         <li><a class="icon fa-close" href="logout"><span>Salir</span></a></li>
     </ul>
 </nav>
