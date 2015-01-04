@@ -454,6 +454,7 @@ class CalendarController extends BaseController {
         return $html;
     }
     
+    //funciones de ayuda
     public function ayuda() {
         return View::make('ayuda');
     }
@@ -462,4 +463,31 @@ class CalendarController extends BaseController {
         return View::make('videos_ayuda.parte_alta');
     }
     
+    public function parteEditar() {
+        return View::make('videos_ayuda.parte_editar');
+    }
+    
+    public function parteBorrar() {
+        return View::make('videos_ayuda.parte_borrar');
+    }
+    
+    public function listadoMes() {
+        return View::make('videos_ayuda.listar_mes');
+    }
+    
+    public function cambiarMes() {
+        return View::make('videos_ayuda.cambiar_mes');
+    }
+    
+    public function vacaciones() {
+        return View::make('videos_ayuda.vacaciones');
+    }
+    
+    public function trabajo() {
+        return View::make('videos_ayuda.trabajo');
+    }
+    
+    public function baja() {
+        return View::make('videos_ayuda.baja');
+    }
 }

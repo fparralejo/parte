@@ -49,3 +49,12 @@ Route::get('altaTrabOK','TrabajadorController@altaTrabOK');
 //ayuda
 Route::get('ayuda','CalendarController@ayuda');
 Route::get('parte_alta','CalendarController@parteAlta');
+Route::get('parte_editar','CalendarController@parteEditar');
+Route::get('parte_borrar','CalendarController@parteBorrar');
+
+Route::get('listar_mes','CalendarController@listadoMes');
+Route::get('cambiar_mes','CalendarController@cambiarMes');
+
+Route::get('vacaciones','CalendarController@vacaciones');
+Route::get('trabajo','CalendarController@trabajo');
+Route::get('baja','CalendarController@baja');
