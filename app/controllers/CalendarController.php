@@ -471,6 +471,10 @@ class CalendarController extends BaseController {
         return View::make('videos_ayuda.parte_borrar');
     }
     
+    public function parteBuscar() {
+        return View::make('videos_ayuda.parte_buscar');
+    }
+    
     public function listadoMes() {
         return View::make('videos_ayuda.listar_mes');
     }

@@ -52,6 +52,8 @@ Route::get('parte_alta','CalendarController@parteAlta');
 Route::get('parte_editar','CalendarController@parteEditar');
 Route::get('parte_borrar','CalendarController@parteBorrar');
 
+Route::get('parte_buscar','CalendarController@parteBuscar');
+
 Route::get('listar_mes','CalendarController@listadoMes');
 Route::get('cambiar_mes','CalendarController@cambiarMes');
 

@@ -8,6 +8,9 @@ function parte_editar(){
 function parte_borrar(){
     window.open ('{{ URL::to('parte_borrar') }}',"nueva","resizable=yes, scrollbars=yes, width=650,height=450");
 }
+function buscar(){
+    window.open ('{{ URL::to('parte_buscar') }}',"nueva","resizable=yes, scrollbars=yes, width=650,height=450");
+}
 function listar_mes(){
     window.open ('{{ URL::to('listar_mes') }}',"nueva","resizable=yes, scrollbars=yes, width=650,height=450");
 }
@@ -56,6 +59,14 @@ function baja(){
                         <tr>
                             <td></td>
                             <td style="text-align: left;"><a href="#" onclick="parte_borrar();">Borrar</a></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right;">BUSCAR</td>
+                            <td style="text-align: left;"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td style="text-align: left;"><a href="#" onclick="buscar();">Buscar</a></td>
                         </tr>
                         <tr>
                             <td style="text-align: right;">LISTADOS</td>

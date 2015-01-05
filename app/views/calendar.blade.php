@@ -477,7 +477,7 @@
             </ul>
         </li>
         @endif
-        <li><a class="icon fa-close" href="javascript:ayuda();"><span>Ayuda</span></a></li>
+        <li><a class="icon fa-info-circle" href="javascript:ayuda();"><span>Ayuda</span></a></li>
         <li><a class="icon fa-close" href="logout"><span>Salir</span></a></li>
     </ul>
 </nav>
