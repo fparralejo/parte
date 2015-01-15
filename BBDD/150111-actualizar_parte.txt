@@ -1,0 +1,5 @@
+ALTER TABLE `partefpp_partes`
+	ADD COLUMN `extras` INT(5) NULL DEFAULT '0' AFTER `horas`;
+ALTER TABLE `partefpp_partes`
+	CHANGE COLUMN `horas` `horas` INT(5) NULL DEFAULT '0' AFTER `fecha`;
+

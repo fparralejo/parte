@@ -107,7 +107,7 @@ class CalendarController extends BaseController {
 
 
         //$query = DB::select("select fecha,count(id) as total from partefpp_calendario where month(fecha)='" . $fecha_calendario[1] . "' and year(fecha)='" . $fecha_calendario[0] . "' group by fecha");
-        $query = DB::select("select fecha,count(Id) as total from partefpp_partes where month(fecha)='" . $fecha_calendario[1] . "' and year(fecha)='" . $fecha_calendario[0] . "' and Id=".Session::get('Id')." and borrado=1 group by fecha");
+        $query = DB::select("select fecha,count(Id) as total from partefpp2_partes where month(fecha)='" . $fecha_calendario[1] . "' and year(fecha)='" . $fecha_calendario[0] . "' and Id=".Session::get('Id')." and borrado=1 group by fecha");
 
         $eventos = array();
         for ($i = 0; $i < count($query); $i++) {
@@ -255,35 +255,37 @@ class CalendarController extends BaseController {
         $fecha=Input::get('dia')."-".Input::get('mes')."-".Input::get('anio');
         
         $listar_eventos=$this->listar_evento();
+        $tipos = tipo::all();
         
-        return View::make('eventos', array('fecha' => $fecha,'listar_eventos' => $listar_eventos));
+        return View::make('eventos', array('fecha' => $fecha,'listar_eventos' => $listar_eventos,'tipos'=>$tipos));
     }
     
     function listarMes(){
         $fecha='01-'.Input::get('mes').'-'.Input::get('anio');
-        $query = DB::select("select IdParte,fecha,tipo,horas,descripcion from partefpp_partes where month(fecha)='" . Input::get('mes') . "' and year(fecha)='" . Input::get('anio') . "' and Id=".Session::get('Id')." and borrado=1 order by fecha");
+        $query = DB::select("select IdParte,fecha,tipo,horas,extras,descripcion from partefpp2_partes where month(fecha)='" . Input::get('mes') . "' and year(fecha)='" . Input::get('anio') . "' and Id=".Session::get('Id')." and borrado=1 order by fecha");
 
         return $this->htmlListado($query,$fecha);
     }
     
     private function htmlListado($query,$fecha){
-        $html='<ul>';
+        $html = '<a href="#" onclick="javascript:main(\''. $fecha .'\');" rel="'. $fecha .'">';
+        $html = $html . '<img src="'. URL::asset('img/volver.png') .'" height="18" width="18">&nbsp';
+        $html = $html . '</a><br/><br/>';
+        
+        $html = $html . '<ul>';
         for ($i = 0; $i < count($query); $i++) {
             $fecha = explode('-',$query[$i]->fecha);
             $fecha = $fecha[2].'-'.$fecha[1].'-'.$fecha[0];
             $html = $html . "<li class='listadoParte'><a href='#' onclick='editarParte(" . $query[$i]->IdParte . ");'>";
             $html = $html . "Fecha: <b>".$fecha.'</b><br/>';
             $html = $html . "Tipo: <b>".$query[$i]->tipo.'</b><br/>';
-            $html = $html . "Horas: <b>".$query[$i]->horas.'</b><br/>';
+            $html = $html . "Horas: <b>".$query[$i]->horas.'</b> - Extras: <b>'.$query[$i]->extras.'</b> <br/>';
             $html = $html . "Descripción: <b>".$query[$i]->descripcion.'</b><br/>';
             $html = $html . "</a></li>";
             $html = $html . "<li>&nbsp;</li>";
         }
         $html = $html . "</ul>";
         
-        $html = $html . '<a href="#" onclick="javascript:main(\''. $fecha .'\');" rel="'. $fecha .'">';
-        $html = $html . '<img src="'. URL::asset('img/volver.png') .'" height="18" width="18">&nbsp';
-        $html = $html . '</a>';
         
         return $html;
     }
@@ -298,12 +300,13 @@ class CalendarController extends BaseController {
         $parte->descripcion = strip_tags(Input::get("evento"));
         $parte->tipo = Input::get("tipo");
         $parte->horas = Input::get("horas");
+        $parte->extras = Input::get("extras");
         $parte->Id = Session::get("Id");
         $parte->borrado = "1";
 
         $html = '';
         if ($parte->save()) {
-            $html = $html . "<p class='ok'>Parte guardado correctamente.</p>";
+            $html = $html . "<input type='hidden' name='parteInsertado' value='".$parte->IdParte."'><p class='ok'>Parte guardado correctamente.</p>";
         } else {
             $html = $html . "<p class='error'>Se ha producido un error guardando el parte.</p>";
         }
@@ -320,6 +323,7 @@ class CalendarController extends BaseController {
         $parte->descripcion = strip_tags(Input::get("evento"));
         $parte->tipo = Input::get("tipo");
         $parte->horas = Input::get("horas");
+        $parte->extras = Input::get("extras");
         $parte->Id = Session::get("Id");
         $parte->borrado = "1";
 
@@ -345,9 +349,9 @@ class CalendarController extends BaseController {
         $html = '<table>';
         $html = $html.'<tr><td colspan="3"><b>Listado de Partes</b></td></tr>';
         for ($i = 0; $i < count($query); $i++) {
-            $html = $html . "<tr class='bgtr'><td colspan='2'><a href='#' onclick='editarParte(" . $query[$i]->IdParte . ");'>" . $query[$i]->descripcion . "</a></td><td align='right'><a href='#' class='eliminar_evento' onClick='borrarEvento(" . $query[$i]->IdParte . ",".Input::get('anio').",".Input::get('mes').",".Input::get('dia').");' title='Eliminar este parte'><div  id='evIcono" . $query[$i]->IdParte . "'><img src='" . URL::asset('img/delete.png') . "' height='10' width='10'></div></a></td></tr>";
-            $html = $html . "<tr class='bgtr2'><td colspan='2'><a href='#' onclick='editarParte(" . $query[$i]->IdParte . ");'><b>" . $query[$i]->tipo . "</b></td><td align='right'><b>" . $query[$i]->horas . "</b></a></td></tr>";
-            $html = $html . "<tr><td colspan='3'><hr/><br/></td></tr>";
+            $html = $html . "<tr class='bgtr'><td colspan='3'><a href='#' onclick='editarParte(" . $query[$i]->IdParte . ");'>" . $query[$i]->descripcion . "</a></td><td align='right'><a href='#' class='eliminar_evento' onClick='borrarEvento(" . $query[$i]->IdParte . ",".Input::get('anio').",".Input::get('mes').",".Input::get('dia').");' title='Eliminar este parte'><div  id='evIcono" . $query[$i]->IdParte . "'><img src='" . URL::asset('img/delete.png') . "' height='10' width='10'></div></a></td></tr>";
+            $html = $html . "<tr class='bgtr2'><td colspan='2'><a href='#' onclick='editarParte(" . $query[$i]->IdParte . ");'><b>" . $query[$i]->tipo . "</b></td><td align='right'><b>" . $query[$i]->horas . " horas - ".$query[$i]->extras." extras</b></a></td><td></td></tr>";
+            $html = $html . "<tr><td colspan='4'><hr/><br/></td></tr>";
         }
         $html = $html.'</table>';
 
@@ -377,7 +381,9 @@ class CalendarController extends BaseController {
         $fecha=explode('-',$datos_parte[0]->fecha);
         $fecha=$fecha[2].'-'.$fecha[1].'-'.$fecha[0];
         
-        return View::make('editar', array('datos_parte' => $datos_parte,'fecha' => $fecha));
+        $tipos = tipo::all();
+        
+        return View::make('editar', array('datos_parte' => $datos_parte,'fecha' => $fecha,'tipos'=>$tipos));
     }
 
     function buscar(){
@@ -443,7 +449,7 @@ class CalendarController extends BaseController {
             $fecha = $fecha[2].'-'.$fecha[1].'-'.$fecha[0];
             $html = $html . "<li class='listadoParte'>";
             $html = $html . "Fecha: <b>".$fecha.'  </b>';
-            $html = $html . "Horas: <b>".$query[$i]->horas.'</b><br/>';
+            $html = $html . "Horas: <b>".$query[$i]->horas."</b> - Extras: <b>".$query[$i]->extras."</b><br/>";
             $html = $html . "Descripción: <b>".$query[$i]->descripcion.'</b><br/>';
             $html = $html . "</li>";
             $html = $html . "<li>&nbsp;</li>";
@@ -494,4 +500,120 @@ class CalendarController extends BaseController {
     public function baja() {
         return View::make('videos_ayuda.baja');
     }
+    
+    public function totalHoras(){
+        return View::make('horasTotales');
+    }
+    
+    public function totalHorasOK(){
+        //recojo el get del año 
+        $anio = Input::get('anio');
+        $Id = Session::get('Id');
+
+        $mensuales = DB::select("
+                            SELECT MONTH(P.fecha) AS Mes,P.tipo,ROUND(SUM(P.horas),2) AS horas,ROUND(SUM(P.extras),2) AS extras
+                            FROM partefpp2_partes P
+                            WHERE P.borrado=1
+                            AND P.Id=$Id
+                            AND YEAR(P.fecha)=$anio
+                            GROUP BY MONTH(P.fecha),P.tipo
+                            ");
+        
+        $anual = DB::select("
+                            SELECT P.tipo,ROUND(SUM(P.horas),2) AS horas,ROUND(SUM(P.extras),2) AS extras
+                            FROM partefpp2_partes P
+                            WHERE P.borrado=1
+                            AND P.Id=$Id
+                            AND YEAR(P.fecha)=$anio
+                            GROUP BY P.tipo
+                            ");
+
+        return View::make('horasTotalesPresentar', array('mensuales' => $mensuales , 'anual' => $anual , 'anio' => $anio));
+    }
+    
+    public function altaTipo(){
+        //presentamos el form de alta de tipo de parte
+        return View::make('altaTipo');
+    }
+    
+    function altaTipoOK(){
+        //primero comprobamos que este tipo no exista ya
+        $listado = tipo::all();
+
+        for ($i = 0; $i < count($listado); $i++) {
+            if($listado[$i]->tipo === Input::get('nombre')){
+                return "<p class='ok'>Este tipo ya existe.</p>";
+            }
+        }
+
+        //sino existe se inserta
+        $tipo = new tipo();
+        $tipo->tipo = Input::get('nombre');
+        if($tipo->save()){
+            return "<p class='ok'>Este tipo se ha dado de alta correctamente.</p>";
+        }else{
+            return "<p class='error'>Se ha producido un error al dar de alta este tipo.</p>";
+        }
+    }
+    
+    public function listadoTipoL() {
+        //listo los trabajadores y administradores que hay
+        
+        $query = tipo::all();
+        
+
+        $html = '<a href="#" onclick="javascript:main(\''. date('d-m-Y') .'\');" rel="'. date('d-m-Y') .'">';
+        $html = $html . '<img src="'. URL::asset('img/volver.png') .'" height="18" width="18">&nbsp';
+        $html = $html . '</a><br/><br/>';
+        
+        $html = $html . "<b>Listado Tipos</b>";
+        $html = $html . '<ul>';
+        for ($i = 0; $i < count($query); $i++) {
+            $html = $html . "<li class='listadoParte'><a href='#' onclick='editarTipo(" . $query[$i]->id . ");'>";
+            $html = $html . "Nombre Tipo: <b>".$query[$i]->tipo.'</b><br/>';
+            $html = $html . "</a></li>";
+            $html = $html . "<li>&nbsp;</li>";
+        }
+        $html = $html . "</ul>";
+        
+        return $html;
+    }
+    
+    public function editarTipo(){
+        $tipo = tipo::find(Input::get('id'));
+        
+        return View::make('editarTipo', array('tipo' => $tipo));
+    }
+    
+    public function editarTipoOK(){
+        //se editan en la tabla tipo y en la de partes
+        
+        //1º en la tabla partes
+        //
+        
+        
+        $OK = parte::where("tipo","=",Input::get('tipo_a'))
+                    ->where("Borrado","=","1")
+                    ->update(array('tipo' => Input::get('tipo_n')));
+        
+        
+        $OK = true;
+        if(!$tipo->save()){
+            $OK = false;
+        }
+        
+        
+        //2º en la tabla tipo
+        $tipo = tipo::find(Input::get('id'));
+        $tipo->tipo = Input::get('tipo_n');
+        
+        
+        
+        if($OK){
+            return "<p class='ok'>Este tipo se ha editado correctamente.</p>";
+        }else{
+            return "<p class='error'>Se ha producido un error en la edición de este tipo.</p>";
+        }
+    }
+    
 }

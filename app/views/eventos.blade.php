@@ -16,31 +16,33 @@
                     <form class='formeventos'>
                         <table>
                             <tr>
-                                <td width="60%">
+                                <td width="50%">
                                     <label>Tipo</label>
                                     <select id="tipo">
-                                        <option value="Trabajo">Trabajo</option>
-                                        <option value="Vacaciones">Vacaciones</option>
-                                        <option value="Baja">Baja</option>
+                                        @foreach ($tipos as $tipo)
+                                        <option value="{{ $tipo['tipo'] }}">{{ $tipo['tipo'] }}</option>
+                                        @endforeach
                                     </select>
                                 </td>
-                                <td width="40%">
+                                <td width="25%">
                                     <label>Horas</label>
-                                    <select name='evento_horas' id='evento_horas' class='required'>
-                                        <?php for($i=1;$i<=24;$i++) { ?>
-                                        <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
-                                        <?php } ?>
-                                    </select>
+                                    <input type='text' name='evento_horas' id='evento_horas' class='required'
+                                           value="0" onBlur="solonumerosM(this);" />
+                                </td>
+                                <td width="25%">
+                                    <label>Extras</label>
+                                    <input type='text' name='evento_extras' id='evento_extras' class='required'
+                                           value="0" onBlur="solonumerosM(this);" />
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="2">
+                                <td colspan="3">
                                     <label>Descripción</label>
                                     <input type='text' name='evento_titulo' id='evento_titulo' class='required'>
                                 <td>
                             </tr>
                             <tr>
-                                <td colspan="2">
+                                <td colspan="3">
                                     <br/>
                                     <input type='button' name='Enviar' value='Nuevo' onClick="darAltaEvento();">
                                     <input type='hidden' name='evento_fecha' id='evento_fecha' value='{{ $fecha }}'>

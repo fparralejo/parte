@@ -60,3 +60,12 @@ Route::get('cambiar_mes','CalendarController@cambiarMes');
 Route::get('vacaciones','CalendarController@vacaciones');
 Route::get('trabajo','CalendarController@trabajo');
 Route::get('baja','CalendarController@baja');
+
+Route::get('totalHoras','CalendarController@totalHoras');
+Route::get('totalHorasOK','CalendarController@totalHorasOK');
+
+Route::get('altaTipo','CalendarController@altaTipo');
+Route::get('altaTipoOK','CalendarController@altaTipoOK');
+Route::get('listadoTipoL','CalendarController@listadoTipoL');
+Route::get('editarTipo','CalendarController@editarTipo');
+Route::get('editarTipoOK','CalendarController@editarTipoOK');

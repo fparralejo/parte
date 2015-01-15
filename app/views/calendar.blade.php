@@ -53,10 +53,36 @@
         var eventoTxt = $("#evento_titulo").val();
         var fecha = $("#evento_fecha").val();
         var horas = $("#evento_horas").val();
+        var extras = $("#evento_extras").val();
         var tipo = $("#tipo").val();
 
         //comprobamos que haya texto en '#evento_titulo'
-        if(eventoTxt!=='' && horas!=='' && tipo!==''){
+        var comprobacionEventoTxt = false;
+        if(eventoTxt !== ''){
+            comprobacionEventoTxt = true;
+        }
+        var comprobacionHoras = false;
+        if(horas === '0' && extras === '0'){
+        }else{
+            comprobacionHoras = true;
+        }    
+
+        if(comprobacionEventoTxt === false){
+            $("#respuesta_accion").html("<p class='rojo'>Se debe introducir un texto.</p>");
+            //borrar el texto a los 3 segundos
+            setTimeout(function ()
+            {
+                $("#respuesta_accion").html("");
+            }, 3000);
+        }else
+        if(comprobacionHoras === false){
+            $("#respuesta_accion").html("<p class='rojo'>Horas y Extras no pueden ser 0 a la vez.</p>");
+            //borrar el texto a los 3 segundos
+            setTimeout(function ()
+            {
+                $("#respuesta_accion").html("");
+            }, 3000);
+        }else{
             $('#formNuevo').hide();
             $('#dandoAlta').show();
 
@@ -64,7 +90,7 @@
                 type: "GET",
                 url: "guardar_evento",
                 cache: false,
-                data: {evento: eventoTxt, fecha: fecha, horas: horas, tipo: tipo, accion: "guardar_evento"}
+                data: {evento: eventoTxt, fecha: fecha, horas: horas, extras: extras, tipo: tipo, accion: "guardar_evento"}
             }).done(function (respuesta2)
             {
                 document.getElementById('evento_titulo').value='';
@@ -81,14 +107,41 @@
                     evento(dia,mes,anio);
                 }, 3000);
             });
-        }else{
-            $("#respuesta_accion").html("<p class='rojo'>Se debe introducir un texto.</p>");
-            //borrar el texto a los 3 segundos
-            setTimeout(function ()
-            {
-                $("#respuesta_accion").html("");
-            }, 3000);
         }
+
+//        if((comprobacionEventoTxt === true) && (comprobacionHoras === true)){
+//            $('#formNuevo').hide();
+//            $('#dandoAlta').show();
+//
+//            $.ajax({
+//                type: "GET",
+//                url: "guardar_evento",
+//                cache: false,
+//                data: {evento: eventoTxt, fecha: fecha, horas: horas, extras: extras, tipo: tipo, accion: "guardar_evento"}
+//            }).done(function (respuesta2)
+//            {
+//                document.getElementById('evento_titulo').value='';
+//                document.getElementById('evento_fecha').value='';
+//                $("#respuesta_accion").html(respuesta2);
+//                $('#dandoAlta').hide();
+//                //redibujar toda la pantalla de nuevo con el nuevo evento guardado
+//                setTimeout(function ()
+//                {
+//                    var fechaA=fecha.split('-');
+//                    var dia=fechaA[0];
+//                    var mes=fechaA[1];
+//                    var anio=fechaA[2];
+//                    evento(dia,mes,anio);
+//                }, 3000);
+//            });
+//        }else{
+//            $("#respuesta_accion").html("<p class='rojo'>Se debe introducir un texto.</p>");
+//            //borrar el texto a los 3 segundos
+//            setTimeout(function ()
+//            {
+//                $("#respuesta_accion").html("");
+//            }, 3000);
+//        }
         
     }
     
@@ -162,11 +215,37 @@
         var eventoTxt = $("#evento_titulo").val();
         var fecha = $("#evento_fecha").val();
         var horas = $("#evento_horas_e").val();
+        var extras = $("#evento_extras_e").val();
         var tipo = $("#tipo").val();
         var IdParte = $("#IdParte").val();
 
         //comprobamos que haya texto en '#evento_titulo'
-        if(eventoTxt!=='' && horas!=='' && tipo!==''){
+        var comprobacionEventoTxt = false;
+        if(eventoTxt !== ''){
+            comprobacionEventoTxt = true;
+        }
+        var comprobacionHoras = false;
+        if(horas === '0' && extras === '0'){
+        }else{
+            comprobacionHoras = true;
+        }    
+
+        if(comprobacionEventoTxt === false){
+            $("#respuesta_accion").html("<p class='rojo'>Se debe introducir un texto.</p>");
+            //borrar el texto a los 3 segundos
+            setTimeout(function ()
+            {
+                $("#respuesta_accion").html("");
+            }, 3000);
+        }else
+        if(comprobacionHoras === false){
+            $("#respuesta_accion").html("<p class='rojo'>Horas y Extras no pueden ser 0 a la vez.</p>");
+            //borrar el texto a los 3 segundos
+            setTimeout(function ()
+            {
+                $("#respuesta_accion").html("");
+            }, 3000);
+        }else{
             $('#formNuevo').hide();
             $('#dandoAlta').show();
 
@@ -174,7 +253,7 @@
                 type: "GET",
                 url: "editarParteOK",
                 cache: false,
-                data: {IdParte: IdParte, evento: eventoTxt, fecha: fecha, horas: horas, tipo: tipo, accion: "editarParteOK"}
+                data: {IdParte: IdParte, evento: eventoTxt, fecha: fecha, horas: horas, extras: extras, tipo: tipo, accion: "editarParteOK"}
             }).done(function (respuesta2)
             {
                 document.getElementById('evento_titulo').value='';
@@ -191,13 +270,6 @@
                     evento(dia,mes,anio);
                 }, 3000);
             });
-        }else{
-            $("#respuesta_accion").html("<p class='rojo'>Se debe introducir un texto.</p>");
-            //borrar el texto a los 3 segundos
-            setTimeout(function ()
-            {
-                $("#respuesta_accion").html("");
-            }, 3000);
         }
     }
 
@@ -220,7 +292,7 @@
     function buscarOK(){
         var buscar = $("#buscar_txt_b").val();
         
-        if(buscar.length>2){
+        if(buscar.length>0){
             var agenda = $(".cal");
             agenda.html("<img src='{{ URL::asset('img/loading.gif') }}'>");
 
@@ -234,7 +306,7 @@
                 $(".cal").html(respuesta2);
             });
         }else{
-            alert('Minimo de 3 caracteres');
+            alert('Minimo de 1 caracter');
         }
     }
     
@@ -430,6 +502,168 @@
         });
     }
     
+    function totalHoras(){
+        var agenda = $(".cal");
+        agenda.html("<img src='{{ URL::asset('img/loading.gif') }}'>");
+
+        $.ajax({
+            type: "GET",
+            url: "totalHoras",
+            cache: false,
+            data: {accion: "ayuda"}
+        }).done(function (respuesta)
+        {
+            $(".cal").html(respuesta);
+        });
+    }
+    
+    function totalHorasOK(){
+        var anio = $("#anio").val();
+        
+        var agenda = $(".cal");
+        agenda.html("<img src='{{ URL::asset('img/loading.gif') }}'>");
+
+        $.ajax({
+            type: "GET",
+            url: "totalHorasOK",
+            cache: false,
+            data: {anio: anio, accion: "totalHorasOK"}
+        }).done(function (respuesta)
+        {
+            $(".cal").html(respuesta);
+        });
+    }
+    
+    function altaTipo(){
+        var agenda = $(".cal");
+        agenda.html("<img src='{{ URL::asset('img/loading.gif') }}'>");
+
+        $.ajax({
+            type: "GET",
+            url: "altaTipo",
+            cache: false,
+            data: {accion: "altaTipo"}
+        }).done(function (respuesta)
+        {
+            $(".cal").html(respuesta);
+        });
+    }
+
+    function altaTipoOK(){
+        var nombre = $("#nombre").val();
+        
+        //comprobamos que haya texto en '#evento_titulo'
+        if(nombre!==''){
+            $('#formNuevo').hide();
+            $('#dandoAlta').show();
+
+            $.ajax({
+                type: "GET",
+                url: "altaTipoOK",
+                cache: false,
+                data: {nombre: nombre, accion: "altaTipoOK"}
+            }).done(function (respuesta2)
+            {
+                $("#respuesta_accion").html(respuesta2);
+                $('#dandoAlta').hide();
+                //redibujar toda la pantalla de nuevo con el nuevo evento guardado
+                setTimeout(function ()
+                {
+                    $("#respuesta_accion").html('');
+                    listadoTipo();
+                }, 3000);
+            });
+        }else{
+            $("#respuesta_accion").html("<p class='rojo'>Se debe introducir un texto.</p>");
+            //borrar el texto a los 3 segundos
+            setTimeout(function ()
+            {
+                $("#respuesta_accion").html("");
+            }, 3000);
+        }
+    }
+
+    function listadoTipo(){
+        var agenda = $(".cal");
+        agenda.html("<img src='{{ URL::asset('img/loading.gif') }}'>");
+
+        $.ajax({
+            type: "GET",
+            url: "listadoTipoL",
+            cache: false,
+            data: {accion: "listadoTipoL"}
+        }).done(function (respuesta)
+        {
+            $(".cal").html(respuesta);
+        });
+    }
+    
+
+    //para comprobar que en este campo solo se introduce datos numericos
+    function solonumerosM(objeto){
+        if($(objeto).val()!=''){
+            //comprobar que no se introduzco texto no numerico
+            if(isNaN($(objeto).val())){
+                alert('Los campos de horas y extras son numéricos');
+                objeto.value='0';
+            }
+            //comprobar que no se introduzco numero negativo
+            var res = objeto.value.substring(0, 1); 
+            if(res==='-'){
+                alert('Los campos de horas y extras deben ser positivos');
+                objeto.value='0';
+            }
+        }
+    }
+    
+    function editarTipo(id){
+        var agenda = $(".cal");
+        agenda.html("<img src='{{ URL::asset('img/loading.gif') }}'>");
+
+        $.ajax({
+            type: "GET",
+            url: "editarTipo",
+            cache: false,
+            data: {id: id, accion: "editarTipo"}
+        }).done(function (respuesta)
+        {
+            $(".cal").html(respuesta);
+        });
+    }
+    
+    function editarTipoOK(id){
+        var tipo_n = $("#tipo_n").val();
+        var tipo_a = $("#tipo_a").val();
+        
+        //comprobamos que haya texto en '#evento_titulo'
+        if(tipo_n !== ''){
+            $('#formNuevo').hide();
+            $('#dandoAlta').show();
+
+            $.ajax({
+                type: "GET",
+                url: "editarTipoOK",
+                cache: false,
+                data: {id: id, tipo_n: tipo_n, tipo_a: tipo_a, accion: "editarTipoOK"}
+            }).done(function (respuesta2)
+            {
+                $("#respuesta_accion").html(respuesta2);
+                $('#dandoAlta').hide();
+                //redibujar toda la pantalla de nuevo con el nuevo evento guardado
+                setTimeout(function ()
+                {
+                    listadoTipo();
+                }, 3000);
+            });
+        }else{
+            $("#respuesta_accion").html("<p class='rojo'>Se debe introducir un texto.</p>");
+            //borrar el texto a los 3 segundos
+            setTimeout(function ()
+            {
+                $("#respuesta_accion").html("");
+            }, 3000);
+        }
+    }
     
     
 
@@ -461,19 +695,27 @@
     <ul>
         <li><a class="icon fa-bar-chart-o" href="javascript:buscar();"><span>Buscar</span></a></li>
         <li>
-            <a class="icon fa-retweet" href="">Listados Partes</a>
+            <a class="icon fa-retweet" href="">Listados</a>
             <ul>
                 <li><a href="javascript:prepararListado('Vacaciones');">Vacaciones</a></li>
                 <li><a href="javascript:prepararListado('Trabajo');">Trabajo (Buscar)</a></li>
                 <li><a href="javascript:prepararListado('Baja');">Baja</a></li>
+                <li><a href="javascript:totalHoras();">Totales Horas</a></li>
             </ul>
         </li>
         @if(Session::has('rol') && Session::get('rol')==='Administrador')
         <li>
-            <a class="icon fa-cog" href="">Gestión Trabajadores</a>
+            <a class="icon fa-cog" href="">Trabajadores</a>
             <ul>
                 <li><a href="javascript:altaTrab();">Alta</a></li>
                 <li><a href="javascript:listadoTrab();">Editar Datos/Baja</a></li>
+            </ul>
+        </li>
+        <li>
+            <a class="icon fa-bell" href="">Tipos</a>
+            <ul>
+                <li><a href="javascript:altaTipo();">Alta</a></li>
+                <li><a href="javascript:listadoTipo();">Editar</a></li>
             </ul>
         </li>
         @endif

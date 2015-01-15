@@ -1,8 +1,8 @@
 <?php
 
-class calendario extends Eloquent{
+class tipo extends Eloquent{
 	
-	protected $table = 'partefpp_calendario';
+	protected $table = 'partefpp2_tipos';
 
 	public $timestamps = false;
 

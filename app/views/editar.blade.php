@@ -16,27 +16,29 @@
                     <form class='formeventos'>
                         <table>
                             <tr>
-                                <td width="60%">
+                                <td width="50%">
                                     <label>Tipo</label>
                                     <select id="tipo">
-                                        <option value="Trabajo" <?php if($datos_parte[0]->tipo==='Trabajo'){echo 'selected';}?>>Trabajo</option>
-                                        <option value="Vacaciones" <?php if($datos_parte[0]->tipo==='Vacaciones'){echo 'selected';}?>>Vacaciones</option>
-                                        <option value="Baja" <?php if($datos_parte[0]->tipo==='Baja'){echo 'selected';}?>>Baja</option>
+                                        @foreach ($tipos as $tipo)
+                                        <option value="{{ $tipo['tipo'] }}" <?php if($datos_parte[0]->tipo===$tipo['tipo']){echo 'selected';}?>>{{ $tipo['tipo'] }}</option>
+                                        @endforeach
                                     </select>
                                 </td>
-                                <td width="40%">
+                                <td width="25%">
                                     <label>Horas</label>
-                                    <select name='evento_horas' id='evento_horas_e' class='required'>
-                                        <?php for($i=1;$i<=24;$i++) { ?>
-                                        <option value="<?php echo $i; ?>" <?php if((int)$datos_parte[0]->horas===$i){echo 'selected';}?>><?php echo $i; ?></option>
-                                        <?php } ?>
-                                    </select>
+                                    <input type='text' name='evento_horas' id='evento_horas_e' class='required'
+                                           value="<?php echo $datos_parte[0]->horas; ?>" onBlur="solonumerosM(this);" />
+                                </td>
+                                <td width="25%">
+                                    <label>Extras</label>
+                                    <input type='text' name='evento_extras' id='evento_extras_e' class='required'
+                                           value="<?php echo $datos_parte[0]->extras; ?>" onBlur="solonumerosM(this);" />
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="2">
+                                <td colspan="3">
                                     <label>Descripción</label>
-                                    <input type='text' name='evento_titulo' id='evento_titulo' class='required' value="{{ $datos_parte[0]->descripcion }}">
+                                    <input type='text' name='evento_titulo' id='evento_titulo' class='required' value="{{ htmlentities($datos_parte[0]->descripcion) }}">
                                 </td>
                             </tr>
                             <tr>
