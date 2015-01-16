@@ -60,7 +60,7 @@
         <div id="footer-wrapper">
             <div id="copyright" clas="container">
                 <ul class="links">
-                    <li>Francisco Parralejo V1.1 Enero-2015</li>
+                    <li>Francisco Parralejo V2.0 Enero-2015</li>
                 </ul>
             </div>
         </div>

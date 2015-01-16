@@ -310,7 +310,7 @@
         }
     }
     
-    function prepararListado(tipo){
+    function prepararListado(){
         var agenda = $(".cal");
         agenda.html("<img src='{{ URL::asset('img/loading.gif') }}'>");
 
@@ -318,28 +318,35 @@
             type: "GET",
             url: "listadoTipo",
             cache: false,
-            data: {tipo: tipo, accion: "listadoTipo"}
+            data: {accion: "listadoTipo"}
         }).done(function (respuesta)
         {
             $(".cal").html(respuesta);
         });
     }
     
-    function listadoTipoOK(tipo){
+    function listadoTipoOK(){
+        var tipo = $("#tipo").val();
         var campo1 = $("#campo1").val();
+        var anio = $("#anio").val();
         
-        var agenda = $(".cal");
-        agenda.html("<img src='{{ URL::asset('img/loading.gif') }}'>");
 
-        $.ajax({
-            type: "GET",
-            url: "listadoTipoOK",
-            cache: false,
-            data: {tipo: tipo,campo1: campo1, accion: "listadoTipoOK"}
-        }).done(function (respuesta)
-        {
-            $(".cal").html(respuesta);
-        });
+        if(campo1.length > 0){
+            var agenda = $(".cal");
+            agenda.html("<img src='{{ URL::asset('img/loading.gif') }}'>");
+        
+            $.ajax({
+                type: "GET",
+                url: "listadoTipoOK",
+                cache: false,
+                data: {tipo: tipo, campo1: campo1, anio: anio, accion: "listadoTipoOK"}
+            }).done(function (respuesta)
+            {
+                $(".cal").html(respuesta);
+            });
+        }else{
+            alert('Palabra a Buscar mínimo de 1 carácter');
+        }    
     }
     
     function listadoTrab(){
@@ -635,7 +642,7 @@
         var tipo_n = $("#tipo_n").val();
         var tipo_a = $("#tipo_a").val();
         
-        //comprobamos que haya texto en '#evento_titulo'
+        //comprobamos que haya texto en '#tipo_n'
         if(tipo_n !== ''){
             $('#formNuevo').hide();
             $('#dandoAlta').show();
@@ -697,9 +704,7 @@
         <li>
             <a class="icon fa-retweet" href="">Listados</a>
             <ul>
-                <li><a href="javascript:prepararListado('Vacaciones');">Vacaciones</a></li>
-                <li><a href="javascript:prepararListado('Trabajo');">Trabajo (Buscar)</a></li>
-                <li><a href="javascript:prepararListado('Baja');">Baja</a></li>
+                <li><a href="javascript:prepararListado();">Listado por Tipo</a></li>
                 <li><a href="javascript:totalHoras();">Totales Horas</a></li>
             </ul>
         </li>

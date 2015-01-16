@@ -409,33 +409,26 @@ class CalendarController extends BaseController {
     
     public function listadoTipo() {
         //preparo el form para listar
-        $tipo=Input::get('tipo');
+        $tipos = tipo::all();
         
-        return View::make('listarTipo', array('tipo' => $tipo));
+        return View::make('listarTipo', array('tipos' => $tipos));
     }
     
     public function listadoTipoOK() {
         //recojo los get de tipo(Trabajo, Vacaciones o Baja) y campo1(filtro para listar)
         $tipo=Input::get('tipo');
         $campo1=Input::get('campo1');
+        $anio=Input::get('anio');
         
         //si $tipo es Vacaciones o Baja en $campo1 viene el año, se filtra por fecha
         //si $tipo es trabajo se filtra por descripcion y por defecto el año actual
 
-        $query='';
-        if($tipo==='Vacaciones' || $tipo==='Baja'){
-            $query=parte::where('Id','=', Session::get('Id'))
-                          ->where('borrado','=', "1")
-                          ->where('tipo','=', $tipo)
-                          ->where(DB::raw("year(fecha)"),'=', $campo1)
-                          ->get();
-        }else if($tipo==='Trabajo'){
-            $query=parte::where('Id','=', Session::get('Id'))
-                          ->where('borrado','=', "1")
-                          ->where('tipo','=', $tipo)
-                          ->where('descripcion','LIKE', "%$campo1%")
-                          ->get();
-        }
+        $query=parte::where('Id','=', Session::get('Id'))
+                      ->where('borrado','=', "1")
+                      ->where('tipo','=', $tipo)
+                      ->where('descripcion','LIKE', "%$campo1%")
+                      ->where(DB::raw("year(fecha)"),'=', $anio)
+                      ->get();
 
         
         $html = '<a href="#" onclick="javascript:main(\''. date('d-m-Y') .'\');" rel="'. date('d-m-Y') .'">';
@@ -589,27 +582,16 @@ class CalendarController extends BaseController {
         //se editan en la tabla tipo y en la de partes
         
         //1º en la tabla partes
-        //
-        
-        
         $OK = parte::where("tipo","=",Input::get('tipo_a'))
                     ->where("Borrado","=","1")
                     ->update(array('tipo' => Input::get('tipo_n')));
-        
-        
-        $OK = true;
-        if(!$tipo->save()){
-            $OK = false;
-        }
         
         
         //2º en la tabla tipo
         $tipo = tipo::find(Input::get('id'));
         $tipo->tipo = Input::get('tipo_n');
         
-        
-        
-        if($OK){
+        if($tipo->save()){
             return "<p class='ok'>Este tipo se ha editado correctamente.</p>";
         }else{
             return "<p class='error'>Se ha producido un error en la edición de este tipo.</p>";
