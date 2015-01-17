@@ -17,10 +17,12 @@ $indColor=0;
 foreach ($anual as $tipo) {
     $txtDatos = $txtDatos . "{color:'".$color[$indColor]."',name:'".$tipo->tipo."',y:".($tipo->horas + $tipo->extras)."},";
     $indColor = $indColor + 1;
+    if($indColor === 6){
+        $indColor = 0;
+    }
 }
 //quito la ultima coma
 $txtDatos = substr($txtDatos,0,strlen($txtDatos)-1);
-//echo $txtDatos;
 ?>
 
 <script type="text/javascript">

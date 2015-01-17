@@ -7,6 +7,7 @@
 <meta http-equiv="EXPIRES" content="-1">-->
 
 <link type="text/css" rel="stylesheet" media="all" href="{{ URL::asset('css/estilos.css') }}">
+
 <script>
     function generar_calendario(mes, anio)
     {
@@ -108,41 +109,6 @@
                 }, 3000);
             });
         }
-
-//        if((comprobacionEventoTxt === true) && (comprobacionHoras === true)){
-//            $('#formNuevo').hide();
-//            $('#dandoAlta').show();
-//
-//            $.ajax({
-//                type: "GET",
-//                url: "guardar_evento",
-//                cache: false,
-//                data: {evento: eventoTxt, fecha: fecha, horas: horas, extras: extras, tipo: tipo, accion: "guardar_evento"}
-//            }).done(function (respuesta2)
-//            {
-//                document.getElementById('evento_titulo').value='';
-//                document.getElementById('evento_fecha').value='';
-//                $("#respuesta_accion").html(respuesta2);
-//                $('#dandoAlta').hide();
-//                //redibujar toda la pantalla de nuevo con el nuevo evento guardado
-//                setTimeout(function ()
-//                {
-//                    var fechaA=fecha.split('-');
-//                    var dia=fechaA[0];
-//                    var mes=fechaA[1];
-//                    var anio=fechaA[2];
-//                    evento(dia,mes,anio);
-//                }, 3000);
-//            });
-//        }else{
-//            $("#respuesta_accion").html("<p class='rojo'>Se debe introducir un texto.</p>");
-//            //borrar el texto a los 3 segundos
-//            setTimeout(function ()
-//            {
-//                $("#respuesta_accion").html("");
-//            }, 3000);
-//        }
-        
     }
     
     function borrarEvento(id,anio,mes,dia){
@@ -672,7 +638,7 @@
         }
     }
     
-    
+
 
     $(document).ready(function ()
     {
