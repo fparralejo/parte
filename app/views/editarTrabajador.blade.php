@@ -56,7 +56,7 @@
                                 <td>
                                     <div align="center">
                                         <br/>
-                                        <?php if( (int)$usuario->Id <> (int)Session::has('Id')){ ?>
+                                        <?php if( (int)$usuario->Id <> (int)Session::get('Id')){ ?>
                                         <input type='button' name='borrar' value=' Borrar ' onClick="borrarTrabajadorOK('{{ $usuario->Id }}');">
                                         <?php } ?>
                                         <input type='hidden' name='Id' id='Id' value='{{ $usuario->Id }}'>

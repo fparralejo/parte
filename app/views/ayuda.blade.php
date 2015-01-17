@@ -17,14 +17,11 @@ function listar_mes(){
 function cambiar_mes(){
     window.open ('{{ URL::to('cambiar_mes') }}',"nueva","resizable=yes, scrollbars=yes, width=650,height=450");
 }
-function vacaciones(){
-    window.open ('{{ URL::to('vacaciones') }}',"nueva","resizable=yes, scrollbars=yes, width=650,height=450");
+function listar_tipo(){
+    window.open ('{{ URL::to('listar_tipo') }}',"nueva","resizable=yes, scrollbars=yes, width=650,height=450");
 }
-function trabajo(){
-    window.open ('{{ URL::to('trabajo') }}',"nueva","resizable=yes, scrollbars=yes, width=650,height=450");
-}
-function baja(){
-    window.open ('{{ URL::to('baja') }}',"nueva","resizable=yes, scrollbars=yes, width=650,height=450");
+function totales_horas(){
+    window.open ('{{ URL::to('totales_horas') }}',"nueva","resizable=yes, scrollbars=yes, width=650,height=450");
 }
 </script>
 
@@ -82,15 +79,11 @@ function baja(){
                         </tr>
                         <tr>
                             <td></td>
-                            <td style="text-align: left;"><a href="#" onclick="vacaciones();">Vacaciones</a></td>
+                            <td style="text-align: left;"><a href="#" onclick="listar_tipo();">Listado Por Tipos</a></td>
                         </tr>
                         <tr>
                             <td></td>
-                            <td style="text-align: left;"><a href="#" onclick="trabajo();">Trabajo (Buscar)</a></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td style="text-align: left;"><a href="#" onclick="baja();">Baja</a></td>
+                            <td style="text-align: left;"><a href="#" onclick="totales_horas();">Totales por Horas</a></td>
                         </tr>
                     </table>
                 </div>

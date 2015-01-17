@@ -62,64 +62,10 @@ $(function () {
             name: ' ',
             data: [
                 <?php echo $txtDatos; ?>
-//                    {color:'#0DA068',name:'Ventas ',y:48450.91},
-//                    {color:'#33DA68',name:'Compras ',y:22450.33}
             ]
         }]
     });
 });    
-    
-    
-//$(function () {
-//    	// Radialize the colors
-//        Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function(color) {
-//            return {
-//                radialGradient: { cx: 0.5, cy: 0.3, r: 0.7 },
-//                stops: [
-//                    [0, color],
-//                    [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
-//                ]
-//            };
-//        });
-//
-//        // Build the chart
-//        $('#containeringresos').highcharts({
-//            chart: {
-//                plotBackgroundColor: null,
-//                plotBorderWidth: null,
-//                plotShadow: false
-//            },
-//            title: {
-//                text: '{{ $anio }}'
-//            },
-//            tooltip: {
-//        	    pointFormat: '{series.name}:<br/>{point.percentage:.1f}%'
-//            },
-//            plotOptions: {
-//                pie: {
-//                    allowPointSelect: true,
-//                    cursor: 'pointer',
-//                    dataLabels: {
-//                        enabled: true,
-//                        color: '#000000',
-//                        connectorColor: '#000000',
-//                        formatter: function() {
-//                            return this.point.name;
-//                        }
-//                    }
-//                }
-//            },
-//            series: [{
-//                type: 'pie',
-//                name: ' ',
-//                data: [
-//                        {color:'#0DA068',name:'Ventas ',y:48450.91},
-//                        {color:'#33DA68',name:'Compras ',y:22450.33}
-//                        ]
-//            }]
-//        });
-//    });
-    
 </script>
 
 <div class='cal'>
@@ -138,13 +84,18 @@ $(function () {
             <td>
                 <br/>
                 <div id='respuesta_accion'>
-                    <div id="dandoAlta_b" style="display: block;">
-                        <img src='{{ URL::asset('img/loading.gif') }}'>
+                    <div id="containeringresos" style="display: block;">
+                        <div id="dandoAlta_b" style="display: block;">
+                            <img src='{{ URL::asset('img/loading.gif') }}'>
+                        </div>
+                    
                     </div>
                     
-                    <div id="containeringresos" style="display: block;"></div>
-                    
                     <div>
+                        <?php
+//                        var_dump($mensuales);die;
+                        ?>
+                        <?php if(count($mensuales)>0) { ?>
                         <table>
                             <tr style="background-color: #e4e4e4;">
                                 <th><b>Mes</b></th>
@@ -226,6 +177,7 @@ $(function () {
                             }
                             ?>
                         </table>
+                        <?php } ?>
                     </div>
             </td>
         </tr>

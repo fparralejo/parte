@@ -56,14 +56,14 @@ Route::get('parte_buscar','CalendarController@parteBuscar');
 
 Route::get('listar_mes','CalendarController@listadoMes');
 Route::get('cambiar_mes','CalendarController@cambiarMes');
+Route::get('listar_tipo','CalendarController@vacaciones');
+Route::get('totales_horas','CalendarController@totales_horas');
 
-Route::get('vacaciones','CalendarController@vacaciones');
-Route::get('trabajo','CalendarController@trabajo');
-Route::get('baja','CalendarController@baja');
-
+//listados
 Route::get('totalHoras','CalendarController@totalHoras');
 Route::get('totalHorasOK','CalendarController@totalHorasOK');
 
+//Tipos partes
 Route::get('altaTipo','CalendarController@altaTipo');
 Route::get('altaTipoOK','CalendarController@altaTipoOK');
 Route::get('listadoTipoL','CalendarController@listadoTipoL');

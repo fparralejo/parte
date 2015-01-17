@@ -15,11 +15,12 @@ class CalendarController extends BaseController {
     public function getControl() {
         //controlamos si estaamos en sesion por las distintas paginas de la app
         //controlamos las vbles sesion 'nombre', 'apellidos' y 'rol'
-        if (Session::has('nombre') && Session::has('apellidos') && Session::has('rol')) {
+        if (Session::get('nombre') && Session::get('apellidos') && Session::get('rol')) {
             //chequeamos que estos valores del usuario existan en la tabla 'usuarios'
             $existe = usuario::where('nombre', '=', Session::get('nombre'))
                     ->where('apellidos', '=', Session::get('apellidos'))
                     ->where('rol', '=', Session::get('rol'))
+                    ->where('borrado', '=', '1')
                     ->get();
 
             //si existe el contador es mayor que 0
@@ -246,7 +247,7 @@ class CalendarController extends BaseController {
         $html = $html . "</tr>";
         $html = $html . "</table>";
         $html = $html . "</form>";
-        
+
         
         return $html;
     }
@@ -482,18 +483,19 @@ class CalendarController extends BaseController {
         return View::make('videos_ayuda.cambiar_mes');
     }
     
-    public function vacaciones() {
-        return View::make('videos_ayuda.vacaciones');
+    public function listar_tipo() {
+        return View::make('videos_ayuda.listar_tipo');
     }
     
-    public function trabajo() {
-        return View::make('videos_ayuda.trabajo');
+    public function totales_horas() {
+        return View::make('videos_ayuda.totales_horas');
     }
     
-    public function baja() {
-        return View::make('videos_ayuda.baja');
-    }
+//    public function baja() {
+//        return View::make('videos_ayuda.baja');
+//    }
     
+    //funciones de total horas
     public function totalHoras(){
         return View::make('horasTotales');
     }

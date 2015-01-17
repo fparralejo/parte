@@ -6,7 +6,7 @@
     </head>
     <body>
        <video controls>
-           <source src="{{ URL::asset('videos/trabajo.mp4') }}" type="video/mp4">
+           <source src="{{ URL::asset('videos/totales_horas.mp4') }}" type="video/mp4">
            Tu navegador no implementa el elemento video.
         </video>
     </body>
