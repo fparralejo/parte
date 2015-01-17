@@ -56,7 +56,7 @@ Route::get('parte_buscar','CalendarController@parteBuscar');
 
 Route::get('listar_mes','CalendarController@listadoMes');
 Route::get('cambiar_mes','CalendarController@cambiarMes');
-Route::get('listar_tipo','CalendarController@vacaciones');
+Route::get('listar_tipo','CalendarController@listar_tipo');
 Route::get('totales_horas','CalendarController@totales_horas');
 
 //listados
