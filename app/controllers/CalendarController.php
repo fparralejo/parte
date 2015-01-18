@@ -153,13 +153,17 @@ class CalendarController extends BaseController {
         for ($i = 1; $i <= $diasdespues; $i++) {
             if ($tr < $totalfilas) {
                 if ($i >= $primeromes && $i <= $tope) {
-                    $html = $html . "<td class='";
                     /* creamos fecha completa */
                     if ($dia < 10)
                         $dia_actual = "0" . $dia;
                     else
                         $dia_actual = $dia;
                     $fecha_completa = $fecha_calendario[0] . "-" . $fecha_calendario[1] . "-" . $dia_actual;
+                    
+                    //busco si el dia tiene datos o no
+                    $bgcolor = $this->tieneDatos($fecha_completa);
+                    
+                    $html = $html . "<td style='$bgcolor' class='";
 
                     $hayevento = 0;
                     if (isset($eventos[$fecha_completa])) {
@@ -249,6 +253,24 @@ class CalendarController extends BaseController {
         $html = $html . "</form>";
 
         
+        return $html;
+    }
+    
+    //si tiene dato sombrea la casilla del calendario, sino lo deja en blanco
+    private function tieneDatos($fecha_completa){
+        $query = parte::where('fecha', '=', $fecha_completa)
+                        ->where('Id','=', Session::get('Id'))
+                        ->where('borrado','=', '1')
+                        ->orderBy('IdParte', 'asc')
+                        ->get();
+        
+        $html='';
+        if(count($query)>0){
+            $html='background-color: #cbf2de;';
+        }else{
+            $html='';
+        }
+
         return $html;
     }
     
