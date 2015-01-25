@@ -638,6 +638,62 @@
         }
     }
     
+    function excel_exportar(){
+        var agenda = $(".cal");
+        agenda.html("<img src='{{ URL::asset('img/loading.gif') }}'>");
+
+        $.ajax({
+            type: "GET",
+            url: "excel_exportar",
+            cache: false,
+            data: {accion: "excel_exportar"}
+        }).done(function (respuesta)
+        {
+            $(".cal").html(respuesta);
+        });
+    }
+
+    function excel_exportarFichero(){
+
+        var desde = $("#excelFechaDesde").val();
+        var hasta = $("#excelFechaHasta").val();
+
+        //abrimos ventana nueva donde enviamos los datos para descargar el fichero excel
+        window.open ("excel_exportarFichero?desde="+desde+"&hasta="+hasta,"nueva","resizable=yes, scrollbars=yes, width=650,height=450");
+
+        $('#formNuevo').hide();
+        $("#respuesta_accion").html('<p>Ya se a descargado el fichero excel "exportar.xls"</p>');
+    }
+
+
+
+    function excel_importar(){
+        var agenda = $(".cal");
+        agenda.html("<img src='{{ URL::asset('img/loading.gif') }}'>");
+
+        $.ajax({
+            type: "GET",
+            url: "excel_importar",
+            cache: false,
+            data: {accion: "excel_importar"}
+        }).done(function (respuesta)
+        {
+            $(".cal").html(respuesta);
+        });
+    }
+
+    function excel_importarFichero(){
+
+        var desde = $("#excelFechaDesde").val();
+        var hasta = $("#excelFechaHasta").val();
+
+        //abrimos ventana nueva donde enviamos los datos para descargar el fichero excel
+        window.open ("excel_exportarFichero?desde="+desde+"&hasta="+hasta,"nueva","resizable=yes, scrollbars=yes, width=650,height=450");
+
+        $('#formNuevo').hide();
+        $("#respuesta_accion").html('<p>Ya se a descargado el fichero excel "exportar.xls"</p>');
+    }
+
 
 
     $(document).ready(function ()
@@ -674,6 +730,13 @@
                 <li><a href="javascript:totalHoras();">Totales Horas</a></li>
             </ul>
         </li>
+        <li>
+            <a class="icon fa-list" href="">Excel</a>
+            <ul>
+                <li><a href="javascript:excel_exportar();">Exportar</a></li>
+                <li><a href="javascript:excel_importar();">Importar</a></li>
+            </ul>
+        </li>
         @if(Session::has('rol') && Session::get('rol')==='Administrador')
         <li>
             <a class="icon fa-cog" href="">Trabajadores</a>
@@ -706,6 +769,8 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="js/jquery-ui.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.12.0/jquery.validate.min.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.12.0/localization/messages_es.js "></script>
 

@@ -69,3 +69,9 @@ Route::get('altaTipoOK','CalendarController@altaTipoOK');
 Route::get('listadoTipoL','CalendarController@listadoTipoL');
 Route::get('editarTipo','CalendarController@editarTipo');
 Route::get('editarTipoOK','CalendarController@editarTipoOK');
+
+//Excel
+Route::get('excel_importar','CalendarController@excel_importar');
+Route::get('excel_exportar','CalendarController@excel_exportar');
+Route::get('excel_exportarFichero','CalendarController@excel_exportarFichero');
+

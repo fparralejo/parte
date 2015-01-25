@@ -621,5 +621,153 @@ class CalendarController extends BaseController {
             return "<p class='error'>Se ha producido un error en la edición de este tipo.</p>";
         }
     }
+
+    public function excel_importar(){
+        //presentamos el form para indicar filtros del listado
+        return View::make('excel_importar');
+    }
+    
+    //SIN TERMINAR
+    public function excel_importarFichero(){
+        $url = '../public/excel/importar.xls';
+
+        //leo el fichero
+        $XLFileType = PHPExcel_IOFactory::identify($url);  
+        $objReader = PHPExcel_IOFactory::createReader($XLFileType);  
+        $objPHPExcel = $objReader->load($url);  
+
+        //leo los nombres de las hojas (meses)
+        $meses = $objReader->listWorksheetNames($url);
+        $datos = '';
+        foreach($meses as $mes){
+            $datoMes = $objPHPExcel->setActiveSheetIndexByName($mes);
+            //la primera fila es de titulos de las columnas
+            $posDatosFila = 2;
+            while(true){
+                $datoA = trim(utf8_decode($datoMes->getCell('A'.$posDatosFila)->getFormattedValue()));
+                if($datoA !== ''){
+                    $dato['fecha'] = $datoA;
+                    $dato['horas'] = trim(utf8_decode($datoMes->getCell('B'.$posDatosFila)->getFormattedValue()));
+                    $dato['extras'] = trim(utf8_decode($datoMes->getCell('C'.$posDatosFila)->getFormattedValue()));
+                    $dato['tipo'] = trim(utf8_decode($datoMes->getCell('D'.$posDatosFila)->getFormattedValue()));
+                    $dato['descripcion'] = trim(utf8_decode($datoMes->getCell('E'.$posDatosFila)->getFormattedValue()));
+                    //guardo en el array
+                    $datos[] = $dato;
+                }else{
+                    //dejo termino de insertar mas filas (ya esta vacio)
+                    break;
+                }
+                $posDatosFila++;
+            }
+        }
+        
+        var_dump($datos);die;
+    }
+    
+    public function excel_exportar(){
+        //presentamos el form para indicar filtros del listado
+        return View::make('excel_exportar');
+    }
+    
+    public function excel_exportarFichero(){
+        //donde se va a guardar los datos a exportar
+        $url = './excel/exportar.xls';
+        
+        $desde = Input::get('desde');
+        $hasta = Input::get('hasta');
+        
+        //compruebo que el formato de las fechas es correcto
+        //si lo es, l paso a DATE, sino lo dejo en blanco
+        //la fecha debe venir con este formato '05/01/2015' (d/m/Y)
+        if($desde !== ''){
+            $d = DateTime::createFromFormat('d/m/Y', $desde);
+            if($d->format('d/m/Y') === $desde){
+                $desde = explode('/',$desde);
+                $desde = $desde[2] . '-' . $desde[1] . '-' . $desde[0];
+            }else{    
+                $desde = '';
+            }
+        }
+        if($hasta !== ''){
+            $d = DateTime::createFromFormat('d/m/Y', $hasta);
+            if($d->format('d/m/Y') === $hasta){
+                $hasta = explode('/',$hasta);
+                $hasta = $hasta[2] . '-' . $hasta[1] . '-' . $hasta[0];
+            }else{    
+                $hasta = '';
+            }
+        }
+        
+        
+        //si la fecha viene vacia no se indica ese filtro en la consulta
+        //como puede venir las dos vacias, o una vacia y otra con fecha o las dos con fechas
+        //preparamos estas tres posibles opciones (tres consultas distintas)
+        if($desde === '' && $hasta === ''){
+            $query = parte::where('Id','=', Session::get('Id'))
+                          ->where('borrado','=', "1")
+                          ->get();
+        }else
+        if($desde !== '' && $hasta === ''){
+            $query = parte::where('Id','=', Session::get('Id'))
+                          ->where('borrado','=', "1")
+                          ->where('fecha','>=', $desde)
+                          ->get();
+        }else
+        if($desde === '' && $hasta !== ''){
+            $query = parte::where('Id','=', Session::get('Id'))
+                          ->where('borrado','=', "1")
+                          ->where('fecha','<=', $hasta)
+                          ->get();
+        }else
+        if($desde !== '' && $hasta !== ''){
+            $query = parte::where('Id','=', Session::get('Id'))
+                          ->where('borrado','=', "1")
+                          ->where('fecha','>=', $desde)
+                          ->where('fecha','<=', $hasta)
+                          ->get();
+        }    
+        
+        //creo el objeto de PHPExcel
+        $objPHPExcel = new PHPExcel();
+        
+        $objPHPExcel->getProperties()->setCreator("Partes")
+                                     ->setLastModifiedBy("Partes")
+                                     ->setTitle("Excel para exportar datos")
+                                     ->setSubject("Exportar datos")
+                                     ->setDescription("")
+                                     ->setKeywords("office PHPExcel php")
+                                     ->setCategory("");
+
+
+        //primero esribimos las cabeceras de la tabla
+        $objPHPExcel->getActiveSheet()->setCellValue('A1',"fecha");
+        $objPHPExcel->getActiveSheet()->setCellValue('B1',"horas");
+        $objPHPExcel->getActiveSheet()->setCellValue('C1',"extras");
+        $objPHPExcel->getActiveSheet()->setCellValue('D1',"tipo");
+        $objPHPExcel->getActiveSheet()->setCellValue('E1',"descripcion");
+
+
+        //recorremos todo el array del listado y l ovamos guardando en las siguientes filas
+        $fila = 2;
+        for ($i = 0; $i < count($query); $i++) {
+            $objPHPExcel->getActiveSheet()->setCellValue('A'.$fila,$query[$i]->fecha);
+            $objPHPExcel->getActiveSheet()->setCellValue('B'.$fila,$query[$i]->horas);
+            $objPHPExcel->getActiveSheet()->setCellValue('C'.$fila,$query[$i]->extras);
+            $objPHPExcel->getActiveSheet()->setCellValue('D'.$fila,$query[$i]->tipo);
+            $objPHPExcel->getActiveSheet()->setCellValue('E'.$fila,$query[$i]->descripcion);
+            $fila ++;
+        }
+        
+        //guardamos el fichero
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save($url);
+
+        //y por ultimo se descarga al cliente remoto
+         $headers = array(
+             'Content-Type' => 'application/vnd.ms-excel',
+        );
+        
+        return Response::download($url,'exportar.xls',$headers);
+    }
     
 }

@@ -9,7 +9,10 @@
 	<!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
+        
         <script src="js/jquery.min.js"></script>
+        <script src="js/jquery-ui.js"></script>
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
         <script src="js/jquery.dropotron.min.js"></script>
         <script src="js/skel.min.js"></script>
         <script src="js/skel-layers.min.js"></script>
@@ -60,7 +63,7 @@
         <div id="footer-wrapper">
             <div id="copyright" clas="container">
                 <ul class="links">
-                    <li>Francisco Parralejo V2.0 Enero-2015</li>
+                    <li>Francisco Parralejo V3.0 Enero-2015</li>
                 </ul>
             </div>
         </div>
