@@ -629,40 +629,178 @@ class CalendarController extends BaseController {
     
     //SIN TERMINAR
     public function excel_importarFichero(){
-        $url = '../public/excel/importar.xls';
+        $file = Input::file('excelFicheroSubir');
+        
+        if($file->getMimeType() === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
+            $destinoPath = public_path().'/excel/';
+            $subir = $file->move($destinoPath,'importar.xls');
+        
+            //??
+            $url = '../public/excel/importar.xls';
 
-        //leo el fichero
-        $XLFileType = PHPExcel_IOFactory::identify($url);  
-        $objReader = PHPExcel_IOFactory::createReader($XLFileType);  
-        $objPHPExcel = $objReader->load($url);  
+            //leo el fichero
+            $XLFileType = PHPExcel_IOFactory::identify($url);  
+            $objReader = PHPExcel_IOFactory::createReader($XLFileType);  
+            $objPHPExcel = $objReader->load($url);  
 
-        //leo los nombres de las hojas (meses)
-        $meses = $objReader->listWorksheetNames($url);
-        $datos = '';
-        foreach($meses as $mes){
-            $datoMes = $objPHPExcel->setActiveSheetIndexByName($mes);
-            //la primera fila es de titulos de las columnas
-            $posDatosFila = 2;
-            while(true){
-                $datoA = trim(utf8_decode($datoMes->getCell('A'.$posDatosFila)->getFormattedValue()));
-                if($datoA !== ''){
-                    $dato['fecha'] = $datoA;
-                    $dato['horas'] = trim(utf8_decode($datoMes->getCell('B'.$posDatosFila)->getFormattedValue()));
-                    $dato['extras'] = trim(utf8_decode($datoMes->getCell('C'.$posDatosFila)->getFormattedValue()));
-                    $dato['tipo'] = trim(utf8_decode($datoMes->getCell('D'.$posDatosFila)->getFormattedValue()));
-                    $dato['descripcion'] = trim(utf8_decode($datoMes->getCell('E'.$posDatosFila)->getFormattedValue()));
-                    //guardo en el array
-                    $datos[] = $dato;
-                }else{
-                    //dejo termino de insertar mas filas (ya esta vacio)
-                    break;
+            //leo los nombres de las hojas (meses)
+            $meses = $objReader->listWorksheetNames($url);
+            $datos = '';
+            foreach($meses as $mes){
+                $datoMes = $objPHPExcel->setActiveSheetIndexByName($mes);
+                //la primera fila es de titulos de las columnas
+                $posDatosFila = 2;
+                while(true){
+                    $datoA = trim(utf8_decode($datoMes->getCell('A'.$posDatosFila)->getFormattedValue()));
+                    if($datoA !== ''){
+                        $dato['fechaIndice'] = 0;
+                        $dato['fecha'] = $datoA;
+                        $dato['horas'] = trim(utf8_decode($datoMes->getCell('B'.$posDatosFila)->getFormattedValue()));
+                        $dato['extras'] = trim(utf8_decode($datoMes->getCell('C'.$posDatosFila)->getFormattedValue()));
+                        $dato['tipo'] = trim($datoMes->getCell('D'.$posDatosFila)->getFormattedValue());
+                        $dato['descripcion'] = trim($datoMes->getCell('E'.$posDatosFila)->getFormattedValue());
+                        $dato['insertar_tipo'] = 'NO';
+                        //guardo en el array
+                        $datos[] = $dato;
+                    }else{
+                        //dejo termino de insertar mas filas (ya esta vacio)
+                        break;
+                    }
+                    $posDatosFila++;
                 }
-                $posDatosFila++;
+            }
+            
+            //ordenar por fecha
+            //primero obtengo la columna fecha
+            foreach ($datos as $clave => $fila) {
+                $fecha[$clave] = $fila['fecha'];
+            }
+
+            // Ordenar los datos con volumen descendiente, edición ascendiente
+            // Agregar $datos como el último parámetro, para ordenar por la clave común
+            array_multisort($fecha, SORT_ASC, $datos);
+            
+            
+            //ahora presentamos los datos e indicamos si hay algun tipo nuevo que no exista en la tabla de tipos
+            //lo indicamos en color rojo
+            $indice = 0;
+            $fechaAnt = '';
+            $html = '<h4>Datos importados</h4>';
+            $html = $html . '<table>';
+            for ($i = 0; $i < count($datos); $i++) {
+                //comparo la fecha con la anterior, si es la misma pongo en mismo indice, si es distinta aumento este 
+                //indice y lo pongo
+                $fecha = $datos[$i]['fecha'];
+                if($fecha <> $fechaAnt){
+                    $indice++;
+                }
+                $datos[$i]['fechaIndice'] = $indice;
+                
+                //miro a ver si existe es tipo, sino existe lo marco en rojo y negrita
+                $existe = tipo::where("tipo","=",$datos[$i]['tipo'])->get();
+                //$existe = parte::find($datos[$i]['tipo']);
+
+                $txtColorRojo = '';
+                if($existe->isEmpty() === true){
+                    $txtColorRojo = ' - (NO EXISTE)';
+                    $datos[$i]['insertar_tipo'] = 'SI';
+                } 
+                
+                $html = $html . '<tr class="bgtr"><td colspan="3"> Fecha: <b>' . $datos[$i]['fecha'] . '</b></td></tr>';
+                $html = $html . '<tr class="bgtr2"><td> Horas: <b>' . $datos[$i]['horas'] . '</b></td>';
+                $html = $html . '<td> Extras: <b>' . $datos[$i]['extras'] . '</b></td></tr>';
+                $html = $html . "<tr class='bgtr2'><td colspan='3'> Tipo: <b>" . $datos[$i]['tipo'] . $txtColorRojo . ' </b></td></tr>';
+                $html = $html . '<tr class="bgtr2"><td colspan="3"> Descripción:<br/><b> ' . $datos[$i]['descripcion'] . '</b></td></tr>';
+                $html = $html . '<tr><td colspan="3">&nbsp;</td></tr>';
+                
+                $fechaAnt = $fecha;
+            }
+            $html = $html . '</table>';
+            $html = $html . '<br/><br/><p>Estos datos sustituiran a los que esten en la base de datos cronologicamente (los datos que haya de un dia sustituira a los datos que esten de ese dia en la base de datos)</p>';
+            $html = $html . '<p>En el "Tipo" si no existiese en la base de datos actual, saldrá marcado con (NO EXISTE). Si diesemos OK este tipo se crearia </p>';
+
+            $html = $html . '<table>';
+            $html = $html . '<tr><td>';
+            $html = $html . "<input type='button' name='Enviar' value='  OK  ' onClick='excel_importarFicheroTerminar();'>";
+            $html = $html . "</td>";
+            $html = $html . "<td></td>";
+            $html = $html . '<td>';
+            $html = $html . "<input type='button' name='Cancelar' value='Cancelar' onClick='excel_importarFicheroCancelar();'>";
+            $html = $html . "</td></tr>";
+            $html = $html . "</table><br/>";
+            
+            
+            //ahora le paso la vble de la tabla datos a Session por si lo utilizamos
+            Session::put('DatosImportar', $datos);
+            
+            echo $html;
+        }else{
+            echo 'El fichero no es de tipo excel';
+        }
+    }
+    
+    public function importandoDato(){
+        $fechaIndice = Input::get('fechaIndice');
+        
+        //traigo los datos de Session
+        $datos = Session::get('DatosImportar');
+        
+        //HAY QUE GUARDAR EN LA BBDD
+        //1- SE BUSCA SI HAY DATOS DE ESE DIA Y SE BORRAN (BORRADO=0)
+        //2- SE INSERTAN LOS NUEVOS DATOS
+        //3- SE MARCA EN EL ARRAY QUE ESTAN INSERTADOS
+        //3- SI TODO A IDO CORRECTAMENTE SE DEVUELVE OK POR ECHO, SINO ERROR POR ECHO
+        
+        //1- se busca datos de ese dia en la BBDD y se borran
+        $fecha = '';
+        for ($i = 0; $i < count($datos); $i++) {
+            if($datos[$i]['fechaIndice'] === (int)$fechaIndice){
+                $fecha = $datos[$i]['fecha'];
+                break;
             }
         }
         
-        var_dump($datos);die;
+        if($fecha === ''){
+            echo '';die;
+        }
+        
+        //actualizo el campo Borrado=0 en la tabla partes
+        $OK = parte::where("fecha","=",$fecha)
+                    ->update(array('borrado' => '0'));
+
+        
+        
+        //2- Insertamos los nuevos datos en la BBDD
+
+        $OK = true;
+        for ($i = 0; $i < count($datos); $i++) {
+            if($datos[$i]['fechaIndice'] === (int)$fechaIndice){
+                $parteNuevo = new parte();
+                $parteNuevo->Id = Session::get('Id');
+                $parteNuevo->fecha = $datos[$i]['fecha'];
+                $parteNuevo->horas = $datos[$i]['horas'];
+                $parteNuevo->extras = $datos[$i]['extras'];
+                $parteNuevo->tipo = $datos[$i]['tipo'];
+                $parteNuevo->descripcion = $datos[$i]['descripcion'];
+                $parteNuevo->borrado = '1';
+                
+                if(!$parteNuevo->save()){
+                    $OK = false;
+                }
+            }
+        }
+        
+        if($OK === true){
+            echo 'OK. Insertado los partes de la fecha: '.$parteNuevo->fecha.'<br/>';
+        }else{
+            echo 'ERROR. NO se ha insertado los partes de la fecha: '.$parteNuevo->fecha.'<br/>';
+        }
     }
+    
+    public function excel_importarTerminar(){
+        return View::make('excel_importarTerminar');
+    }
+    
     
     public function excel_exportar(){
         //presentamos el form para indicar filtros del listado

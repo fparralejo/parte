@@ -72,6 +72,10 @@ Route::get('editarTipoOK','CalendarController@editarTipoOK');
 
 //Excel
 Route::get('excel_importar','CalendarController@excel_importar');
+Route::post('excel_importarFichero','CalendarController@excel_importarFichero');
+Route::get('excel_importarTerminar','CalendarController@excel_importarTerminar');
+Route::get('importandoDato','CalendarController@importandoDato');
+
 Route::get('excel_exportar','CalendarController@excel_exportar');
 Route::get('excel_exportarFichero','CalendarController@excel_exportarFichero');
 

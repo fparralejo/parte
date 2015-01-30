@@ -682,16 +682,20 @@
         });
     }
 
-    function excel_importarFichero(){
+    function excel_importarFicheroTerminar(){
+        $.ajax({
+            type: "GET",
+            url: "excel_importarTerminar",
+            cache: false,
+            data: {accion: "excel_importarTerminar"}
+        }).done(function (respuesta)
+        {
+            $("#importar_calculos").html(respuesta);
+        });
+    }
 
-        var desde = $("#excelFechaDesde").val();
-        var hasta = $("#excelFechaHasta").val();
-
-        //abrimos ventana nueva donde enviamos los datos para descargar el fichero excel
-        window.open ("excel_exportarFichero?desde="+desde+"&hasta="+hasta,"nueva","resizable=yes, scrollbars=yes, width=650,height=450");
-
-        $('#formNuevo').hide();
-        $("#respuesta_accion").html('<p>Ya se a descargado el fichero excel "exportar.xls"</p>');
+    function excel_importarFicheroCancelar(){
+        window.location.href='main';
     }
 
 
