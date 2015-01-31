@@ -45,13 +45,8 @@ function startProgress() {
     // sino hemos terminado, volvemos a llamar a la funciÃ³n despuÃ©s de un tiempo
     if(!done)
     {
-//        document.getElementById("startBtn").disabled = true;
         setTimeout("startProgress()",0);
     }  
-    //tarea terminada, habilitar el botón
-    else{   
-//        document.getElementById("startBtn").disabled = false;
-    }
 }
 
 $(document).ready(function ()
@@ -64,12 +59,14 @@ $(document).ready(function ()
     <table>
         <tr>
             <td>
-                <h5>Datos del excel terminar</h5>
-            </td>
-            <td>
                 <a href='#' onclick="javascript:main('{{ date('d-m-Y') }}');">
                     <img src='{{ URL::asset('img/volver.png') }}' height='18' width='18'>&nbsp;
                 </a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h5>Datos importar de excel terminar</h5>
             </td>
         </tr>
         <tr>

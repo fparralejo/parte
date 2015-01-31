@@ -774,6 +774,7 @@ class CalendarController extends BaseController {
 
         $OK = true;
         for ($i = 0; $i < count($datos); $i++) {
+            //insertamos en la tabla de parte
             if($datos[$i]['fechaIndice'] === (int)$fechaIndice){
                 $parteNuevo = new parte();
                 $parteNuevo->Id = Session::get('Id');
@@ -788,12 +789,25 @@ class CalendarController extends BaseController {
                     $OK = false;
                 }
             }
+            
+            //ahora comprobamos si este tipo existe o no en la tabla tipo
+            $encontrado = tipo::where("tipo","=",$datos[$i]['tipo'])->get();
+            
+            //sino existe se inserta en la tabla tipo
+            if($encontrado->isEmpty() === true){
+                $tipo = new tipo();
+                $tipo->tipo = $datos[$i]['tipo'];
+                
+                if(!$tipo->save()){
+                    $OK = false;
+                }
+            }
         }
         
         if($OK === true){
-            echo 'OK. Insertado los partes de la fecha: '.$parteNuevo->fecha.'<br/>';
+            echo 'OK. Insertado partes de fecha: '.$parteNuevo->fecha.'<br/>';
         }else{
-            echo 'ERROR. NO se ha insertado los partes de la fecha: '.$parteNuevo->fecha.'<br/>';
+            echo 'ERROR. NO se ha insertado partes de fecha: '.$parteNuevo->fecha.'<br/>';
         }
     }
     

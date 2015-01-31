@@ -2,12 +2,14 @@
     <table>
         <tr>
             <td>
-                <h5>Importar de Excel</h5>
-            </td>
-            <td>
                 <a href='#' onclick="javascript:main('{{ date('d-m-Y') }}');">
                     <img src='{{ URL::asset('img/volver.png') }}' height='18' width='18'>&nbsp;
                 </a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h5>Importar de Excel</h5>
             </td>
             <td></td>
         </tr>
