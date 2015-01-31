@@ -59,6 +59,9 @@ Route::get('cambiar_mes','CalendarController@cambiarMes');
 Route::get('listar_tipo','CalendarController@listar_tipo');
 Route::get('totales_horas','CalendarController@totales_horas');
 
+Route::get('ayuda_excel_exportar','CalendarController@ayuda_excel_exportar');
+Route::get('ayuda_excel_importar','CalendarController@ayuda_excel_importar');
+
 //listados
 Route::get('totalHoras','CalendarController@totalHoras');
 Route::get('totalHorasOK','CalendarController@totalHorasOK');

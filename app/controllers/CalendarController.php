@@ -513,9 +513,15 @@ class CalendarController extends BaseController {
         return View::make('videos_ayuda.totales_horas');
     }
     
-//    public function baja() {
-//        return View::make('videos_ayuda.baja');
-//    }
+    public function ayuda_excel_exportar() {
+        return View::make('videos_ayuda.excel_exportar');
+    }
+    
+    public function ayuda_excel_importar() {
+        return View::make('videos_ayuda.excel_importar');
+    }
+    
+    
     
     //funciones de total horas
     public function totalHoras(){
@@ -627,46 +633,63 @@ class CalendarController extends BaseController {
         return View::make('excel_importar');
     }
     
-    //SIN TERMINAR
     public function excel_importarFichero(){
         $file = Input::file('excelFicheroSubir');
         
-        if($file->getMimeType() === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
+        if($file === null){
+            echo 'El fichero no es de tipo excel';die;
+        }
+        
+        if($file->getMimeType() === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+           || $file->getMimeType() === 'application/vnd.ms-excel'){
+            
             $destinoPath = public_path().'/excel/';
             $subir = $file->move($destinoPath,'importar.xls');
         
-            //??
-            $url = '../public/excel/importar.xls';
+//            //??
+//            $url = '../public/excel/importar.xls';
 
             //leo el fichero
-            $XLFileType = PHPExcel_IOFactory::identify($url);  
+            $XLFileType = PHPExcel_IOFactory::identify($subir);  
             $objReader = PHPExcel_IOFactory::createReader($XLFileType);  
-            $objPHPExcel = $objReader->load($url);  
+            $objPHPExcel = $objReader->load($subir);  
 
             //leo los nombres de las hojas (meses)
-            $meses = $objReader->listWorksheetNames($url);
+            $meses = $objReader->listWorksheetNames($subir);
             $datos = '';
             foreach($meses as $mes){
                 $datoMes = $objPHPExcel->setActiveSheetIndexByName($mes);
                 //la primera fila es de titulos de las columnas
                 $posDatosFila = 2;
-                while(true){
-                    $datoA = trim(utf8_decode($datoMes->getCell('A'.$posDatosFila)->getFormattedValue()));
-                    if($datoA !== ''){
-                        $dato['fechaIndice'] = 0;
-                        $dato['fecha'] = $datoA;
-                        $dato['horas'] = trim(utf8_decode($datoMes->getCell('B'.$posDatosFila)->getFormattedValue()));
-                        $dato['extras'] = trim(utf8_decode($datoMes->getCell('C'.$posDatosFila)->getFormattedValue()));
-                        $dato['tipo'] = trim($datoMes->getCell('D'.$posDatosFila)->getFormattedValue());
-                        $dato['descripcion'] = trim($datoMes->getCell('E'.$posDatosFila)->getFormattedValue());
-                        $dato['insertar_tipo'] = 'NO';
-                        //guardo en el array
-                        $datos[] = $dato;
-                    }else{
-                        //dejo termino de insertar mas filas (ya esta vacio)
-                        break;
+                //primero compruebo que tenga las columnas 'fecha','horas','extras','tipo' y 'descripcion'
+                $fechaTitulo = trim(utf8_decode($datoMes->getCell('A1')->getFormattedValue()));
+                $horasTitulo = trim(utf8_decode($datoMes->getCell('B1')->getFormattedValue()));
+                $extrasTitulo = trim(utf8_decode($datoMes->getCell('C1')->getFormattedValue()));
+                $tipoTitulo = trim(utf8_decode($datoMes->getCell('D1')->getFormattedValue()));
+                $descTitulo = trim(utf8_decode($datoMes->getCell('E1')->getFormattedValue()));
+                
+                if($fechaTitulo === 'fecha' && $horasTitulo === 'horas' && $extrasTitulo === 'extras' 
+                        && $tipoTitulo === 'tipo' && $descTitulo === 'descripcion'){
+                    while(true){
+                        $datoA = trim(utf8_decode($datoMes->getCell('A'.$posDatosFila)->getFormattedValue()));
+                        if($datoA !== ''){
+                            $dato['fechaIndice'] = 0;
+                            $dato['fecha'] = $datoA;
+                            $dato['horas'] = trim(utf8_decode($datoMes->getCell('B'.$posDatosFila)->getFormattedValue()));
+                            $dato['extras'] = trim(utf8_decode($datoMes->getCell('C'.$posDatosFila)->getFormattedValue()));
+                            $dato['tipo'] = trim($datoMes->getCell('D'.$posDatosFila)->getFormattedValue());
+                            $dato['descripcion'] = trim($datoMes->getCell('E'.$posDatosFila)->getFormattedValue());
+                            $dato['insertar_tipo'] = 'NO';
+                            //guardo en el array
+                            $datos[] = $dato;
+                        }else{
+                            //dejo termino de insertar mas filas (ya esta vacio)
+                            break;
+                        }
+                        $posDatosFila++;
                     }
-                    $posDatosFila++;
+                }else{
+                    echo "<b>El formato del excel no es correcto. Debe tener los campos 'fecha', 'horas', 'extras', 'tipo' y 'descripcion'.</b>";die;
                 }
             }
             

@@ -23,6 +23,12 @@ function listar_tipo(){
 function totales_horas(){
     window.open ('{{ URL::to('totales_horas') }}',"nueva","resizable=yes, scrollbars=yes, width=650,height=450");
 }
+function ayuda_excel_exportar(){
+    window.open ('{{ URL::to('ayuda_excel_exportar') }}',"nueva","resizable=yes, scrollbars=yes, width=650,height=450");
+}
+function ayuda_excel_importar(){
+    window.open ('{{ URL::to('ayuda_excel_importar') }}',"nueva","resizable=yes, scrollbars=yes, width=650,height=450");
+}
 </script>
 
 <div id='editar_trabajador'>
@@ -84,6 +90,18 @@ function totales_horas(){
                         <tr>
                             <td></td>
                             <td style="text-align: left;"><a href="#" onclick="totales_horas();">Totales por Horas</a></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right;">EXCEL</td>
+                            <td style="text-align: left;"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td style="text-align: left;"><a href="#" onclick="ayuda_excel_exportar();">Exportar</a></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td style="text-align: left;"><a href="#" onclick="ayuda_excel_importar();">Importar</a></td>
                         </tr>
                     </table>
                 </div>

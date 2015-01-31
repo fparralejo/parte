@@ -6,7 +6,7 @@
     </head>
     <body>
        <video controls>
-           <source src="{{ URL::asset('videos/baja.mp4') }}" type="video/mp4">
+           <source src="{{ URL::asset('videos/exportar.mp4') }}" type="video/mp4">
            Tu navegador no implementa el elemento video.
         </video>
     </body>
