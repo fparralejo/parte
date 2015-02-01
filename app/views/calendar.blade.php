@@ -668,9 +668,11 @@
 
 
     function excel_importar(){
+//        alert('Esta opción no funciona todavia, estoy revisando');
+        
         var agenda = $(".cal");
         agenda.html("<img src='{{ URL::asset('img/loading.gif') }}'>");
-
+        
         $.ajax({
             type: "GET",
             url: "excel_importar",

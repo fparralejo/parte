@@ -646,9 +646,6 @@ class CalendarController extends BaseController {
             $destinoPath = public_path().'/excel/';
             $subir = $file->move($destinoPath,'importar.xls');
         
-//            //??
-//            $url = '../public/excel/importar.xls';
-
             //leo el fichero
             $XLFileType = PHPExcel_IOFactory::identify($subir);  
             $objReader = PHPExcel_IOFactory::createReader($XLFileType);  
@@ -789,6 +786,7 @@ class CalendarController extends BaseController {
         
         //actualizo el campo Borrado=0 en la tabla partes
         $OK = parte::where("fecha","=",$fecha)
+                    ->where("Id","=",Session::get('Id'))
                     ->update(array('borrado' => '0'));
 
         
