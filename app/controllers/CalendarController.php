@@ -768,7 +768,6 @@ class CalendarController extends BaseController {
         //HAY QUE GUARDAR EN LA BBDD
         //1- SE BUSCA SI HAY DATOS DE ESE DIA Y SE BORRAN (BORRADO=0)
         //2- SE INSERTAN LOS NUEVOS DATOS
-        //3- SE MARCA EN EL ARRAY QUE ESTAN INSERTADOS
         //3- SI TODO A IDO CORRECTAMENTE SE DEVUELVE OK POR ECHO, SINO ERROR POR ECHO
         
         //1- se busca datos de ese dia en la BBDD y se borran
@@ -825,6 +824,7 @@ class CalendarController extends BaseController {
             }
         }
         
+        //3- se devuelve si ha sido correcto o erroneo las operaciones
         if($OK === true){
             echo 'OK. Insertado partes de fecha: '.$parteNuevo->fecha.'<br/>';
         }else{
