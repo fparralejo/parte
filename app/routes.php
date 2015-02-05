@@ -11,6 +11,10 @@
 |
 */
 
+//mierdoido, forralla master
+
+
+
 Route::get('/','CalendarController@login');
 Route::post('logeado','CalendarController@postLogin');
 Route::get('logout','CalendarController@logout');
