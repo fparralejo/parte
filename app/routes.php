@@ -11,10 +11,6 @@
 |
 */
 
-//mierdoido, a ver que subes ahora
-//ya esta arreglado
-
-
 Route::get('/','CalendarController@login');
 Route::post('logeado','CalendarController@postLogin');
 Route::get('logout','CalendarController@logout');
