@@ -11,7 +11,6 @@
 |
 */
 
-//mierdoido, forralla master
 
 
 
@@ -81,3 +80,6 @@ Route::get('importandoDato','CalendarController@importandoDato');
 Route::get('excel_exportar','CalendarController@excel_exportar');
 Route::get('excel_exportarFichero','CalendarController@excel_exportarFichero');
 
+
+//RESTful CRUD
+Route::get('restful/listar/{Id}','restfulController@listar');
